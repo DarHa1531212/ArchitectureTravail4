@@ -1,0 +1,54 @@
+MPLINK 4.46, Linker
+Linker Map File - Created Fri Aug 18 08:44:25 2017
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                    Zone1       code   0x000000    program   0x000004
+                   .cinit    romdata   0x000004    program   0x000002
+                    Zone2       code   0x000008    program   0x000008
+                    Zone3       code   0x000020    program   0x000028
+                    Zone4       code   0x000100    program   0x000016
+.config_300001_LED-TIMER.O    romdata   0x300001    program   0x000001
+.config_300002_LED-TIMER.O    romdata   0x300002    program   0x000001
+.config_300003_LED-TIMER.O    romdata   0x300003    program   0x000001
+.config_300005_LED-TIMER.O    romdata   0x300005    program   0x000001
+.config_300006_LED-TIMER.O    romdata   0x300006    program   0x000001
+                   .udata      udata   0x000060       data   0x000001
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000005      
+                            0x000008    0x00000f      
+                            0x000020    0x000047      
+                            0x000100    0x000115      
+                            0x300001    0x300003      
+                            0x300005    0x300006      
+            81 out of 66584 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    Start   0x000020    program     static C:\Temp\Projets-PIC\Projet-PIC-LED-timer\led-timer.asm
+                   TO_ISR   0x000048    program     static C:\Temp\Projets-PIC\Projet-PIC-LED-timer\led-timer.asm
+                     loop   0x000040    program     static C:\Temp\Projets-PIC\Projet-PIC-LED-timer\led-timer.asm
+                     saut   0x000114    program     static C:\Temp\Projets-PIC\Projet-PIC-LED-timer\led-timer.asm
+                    Count   0x000060       data     static C:\Temp\Projets-PIC\Projet-PIC-LED-timer\led-timer.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    Start   0x000020    program     static C:\Temp\Projets-PIC\Projet-PIC-LED-timer\led-timer.asm
+                     loop   0x000040    program     static C:\Temp\Projets-PIC\Projet-PIC-LED-timer\led-timer.asm
+                   TO_ISR   0x000048    program     static C:\Temp\Projets-PIC\Projet-PIC-LED-timer\led-timer.asm
+                     saut   0x000114    program     static C:\Temp\Projets-PIC\Projet-PIC-LED-timer\led-timer.asm
+                    Count   0x000060       data     static C:\Temp\Projets-PIC\Projet-PIC-LED-timer\led-timer.asm
+
+
