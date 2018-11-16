@@ -1,23 +1,26 @@
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE  1
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00001 ;
-                      00002 ; Daniel Audet
-                      00003 ; Juillet 2010
+                      00001 ;************************************************************
+                      00002 ; This program is a simple implementation of the
+                      00003 ; PIC18F4680's A/D. 
                       00004 ;
-                      00005 ;****************************************************************************
-                      00006 ; MCU TYPE
-                      00007 ;****************************************************************************
-                      00008         LIST    p=18F4680     ; définit le numéro du PIC pour lequel ce programme sera assemblé
-                      00009 
-                      00010 ;****************************************************************************
-                      00011 ; INCLUDES
-                      00012 ;****************************************************************************
-                      00013 #include         <p18f4680.inc> ;  La directive "include" permet d'insérer la librairie "p18f4680.inc" d
-                            ans le présent programme.
+                      00005 ; One Channel is selected (AN0).
+                      00006 ; The hardware for this program is the UQAC PIC board. The program 
+                      00007 ; converts the potentiometer value on RA0 and displays it as
+                      00008 ; an 8 bit binary value on Port C.
+                      00009 ;
+                      00010 ; The A/D is configured as follows:
+                      00011 ; Vref = +3V internal
+                      00012 ; A/D Osc. = internal RC
+                      00013 ; A/D Channel = AN0 (RA0)
+                      00014 
+                      00015         LIST P=18F4680          ; Définit le numéro du PIC pour lequel ce programme sera assemblé
+                      00016         #include <P18F4680.INC> ; La directive "include" permet d'insérer la librairie "p18f4680.inc" da
+                            ns le présent programme.
                       00001         LIST
                       00002 
                       00003 ;==========================================================================
@@ -28,232 +31,262 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00008 ;==========================================================================
                       00009 
                       05077         LIST
-                      00014                                 ; Cette librairie contient l'adresse de chacun des SFR ainsi que l'ident
+                      00017                                 ; Cette librairie contient l'adresse de chacun des SFR ainsi que l'ident
                             ité (nombre) de chaque bit 
-                      00015                                 ; de configuration portant un nom prédéfini.
-                      00016 
-                      00017 ;****************************************************************************
-                      00018 ; MCU DIRECTIVES   (définit l'état de certains bits de configuration qui seront chargés lorsque le PIC d
-                            ébutera l'exécution)
-                      00019 ;****************************************************************************
-                      00020     CONFIG      OSC = ECIO           
-                      00021     CONFIG      FCMEN = OFF        
-                      00022     CONFIG      IESO = OFF       
-                      00023     CONFIG      PWRT = ON           
-                      00024     CONFIG      BOREN = OFF        
-                      00025     CONFIG      BORV = 2          
-                      00026     CONFIG      WDT = OFF          
-                      00027     CONFIG      WDTPS = 256       
-                      00028     CONFIG      MCLRE = ON          
-                      00029     CONFIG      LPT1OSC = OFF      
-                      00030     CONFIG      PBADEN = OFF        
-                      00031     CONFIG      STVREN = ON     
-                      00032     CONFIG      LVP = OFF         
-                      00033     CONFIG      XINST = OFF       
-                      00034     CONFIG      DEBUG = OFF         
-                      00035   
-                      00036 
-                      00037 ;************************************************************
-                      00038 ZONE1_UDATA     udata 0x60      ; La directive "udata" (unsigned data) permet de définir l'adresse du dé
+                      00018                                 ; de configuration portant un nom prédéfini.
+                      00019 
+                      00020 ;****************************************************************************
+                      00021 ; MCU DIRECTIVES
+                      00022 ;****************************************************************************
+                      00023     CONFIG      OSC = ECIO           
+                      00024     CONFIG      FCMEN = OFF        
+                      00025     CONFIG      IESO = OFF       
+                      00026     CONFIG      PWRT = ON           
+                      00027     CONFIG      BOREN = OFF        
+                      00028     CONFIG      BORV = 2          
+                      00029     CONFIG      WDT = OFF          
+                      00030     CONFIG      WDTPS = 256       
+                      00031     CONFIG      MCLRE = ON          
+                      00032     CONFIG      LPT1OSC = OFF      
+                      00033     CONFIG      PBADEN = OFF        
+                      00034     CONFIG      STVREN = ON     
+                      00035     CONFIG      LVP = OFF         
+                      00036     CONFIG      XINST = OFF       
+                      00037     CONFIG      DEBUG = OFF         
+                      00038 ;
+                      00039 ZONE1_UDATA     udata 0x60      ; La directive "udata" (unsigned data) permet de définir l'adresse du dé
                             but d'une zone-mémoire
-                      00039                                 ; de la mémoire-donnée (ici 0x60).
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE  2
+                      00040                                 ; de la mémoire-donnée (ici 0x60).
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00040                                 ; Les directives "res" qui suivront, définiront des espaces-mémoire à pa
+                      00041                                 ; Les directives "res" qui suivront, définiront des espaces-mémoire à pa
                             rtir de cette adresse.
-                      00041                                 ; La zone doit porter un nom unique (ici "ZONE1_UDATA") car on peut en d
+                      00042                                 ; La zone doit porter un nom unique (ici "ZONE1_UDATA") car on peut en d
                             éfinir plusieurs.
-                      00042                                 
-000060                00043 Count           res 1           ; La directive "res" réserve un seul octet qui pourra être référencé à l
-                            'aide du mot "Count".
-                      00044                                 ; L'octet sera localisé à l'adresse 0x60 (dans la banque 0).
-                      00045         
-                      00046 ;************************************************************
-                      00047 ; reset vector
-                      00048  
-                      00049 Zone1   code 00000h             ; La directive "code" définit l'adresse de la prochaine instruction qui 
+                      00043                                 
+000060                00044 TEMP            res 1           ; La directive "res" réserve un seul octet qui pourra être référencé à l
+                            'aide du mot "TEMP".
+                      00045                                 ; L'octet sera localisé à l'adresse 0x60 (dans la banque 0).
+                      00046  
+                      00047 ;************************************************************
+                      00048 ; reset and interrupt vectors
+                      00049 
+                      00050 Zone1   code 0x00000            ; La directive "code" définit l'adresse de la prochaine instruction qui 
                             suit cette directive.
-                      00050                                 ; Toutes les autres instructions seront positionnées à la suite.
-                      00051                                 ; Elles formeront une zone dont le nom sera "Zone1".
-                      00052                                 ; Ici, l'instruction "goto" sera donc stockée à l'adresse 00000h dans la
+                      00051                                 ; Toutes les autres instructions seront positionnées à la suite.
+                      00052                                 ; Elles formeront une zone dont le nom sera "Zone1".
+                      00053                                 ; Ici, l'instruction "goto" sera donc stockée à l'adresse 00000h dans la
                              mémoire-programme. 
-                      00053                                 
-000000 EF?? F???      00054         goto Start              ; Le micro-contrôleur saute à l'adresse-programme définie par l'étiquett
+                      00054                                 
+000000 EF?? F???      00055         goto Start              ; Le micro-contrôleur saute à l'adresse-programme définie par l'étiquett
                             e "Start".
-                      00055 
-                      00056 ;************************************************************
-                      00057 ; interrupt vector
-                      00058  
-                      00059 Zone2   code    00008h          ; La directive "code" définit l'adresse de la prochaine instruction qui 
+                      00056 
+                      00057 Zone2   code    0x00008         ; La directive "code" définit l'adresse de la prochaine instruction qui 
                             suit cette directive.
-                      00060                                 ; Toutes les autres instructions seront positionnées à la suite.
-                      00061                                 ; Elles formeront une zone dont le nom sera "Zone2".
-                      00062                                 ; Ici, l'instruction "btfss" sera donc stockée à l'adresse 00008h dans l
+                      00058                                 ; Toutes les autres instructions seront positionnées à la suite.
+                      00059                                 ; Elles formeront une zone dont le nom sera "Zone2".
+                      00060                                 ; Ici, l'instruction "goto" sera donc stockée à l'adresse 0x00008 dans l
                             a mémoire-programme.
-                      00063                                 ;
-                      00064                                 ; NOTE IMPORTANTE: Lorsque le micro-contrôleur subit une interruption, i
+                      00061                                 ;
+                      00062                                 ; NOTE IMPORTANTE: Lorsque le micro-contrôleur subit une interruption, i
                             l interrompt le programme
-                      00065                                 ;                  en cours et saute à l'adresse 00008h pour exécuter l'
-                            instruction qui s'y trouve.
-                      00066                                 ;                  
-                      00067         
-000008 A4F2           00068         btfss INTCON,TMR0IF     ; teste la valeur du bit nommé "TMR0IF" de l'espace-mémoire associée à I
-                            NTCOM. Ce bit est en fait 
-                      00069                                 ; le bit numéro 2 selon la description détaillée du micro-contrôleur PIC
-                            . Si ce bit est à 1 (set), on saute
-                      00070                                 ; l'instruction suivante (retfie). On exécutera alors l'instruction qui 
-                            suit (goto TO_ISR) qui amènera le 
-                      00071                                 ; micro-contrôleur à la première instruction de la sous-routine de gesti
-                            on de l'interruption associée au
-                      00072                                 ; temporisateur 0.
-                      00073                                 
-00000A 0010           00074         retfie                  ; cette instruction force le retour à l'instruction qui a été interrompu
-                            e lors de l'interruption.
-00000C EF?? F???      00075         goto TO_ISR             ; saute à l'adresse-mémoire associée à l'étiquette "TO_ISR"
-                      00076 
-                      00077 ;************************************************************
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE  3
+                      00063                                 ;                  en cours et saute à l'adresse 0x00008 pour exécuter l
+                            'instruction qui s'y trouve.
+                      00064                                 ;
+                      00065                                 
+000008 EF?? F???      00066         goto    ISR             ; saute à l'adresse-mémoire associée à l'étiquette "ISR"        
+                      00067 
+                      00068 ;************************************************************
+                      00069 ; program code starts here
+                      00070 
+                      00071 Zone3   code 0x00020            ; Ici, la nouvelle directive "code" définit une nouvelle adresse (dans l
+                            a mémoire-programme) pour 
+                      00072                                 ; la prochaine instruction. Cette dernière sera ainsi localisée à l'adre
+                            sse 0x00020
+                      00073                                 ; Cette nouvelle zone de code est nommée "Zone3".
+                      00074 
+000020                00075 Start                           ; Cette étiquette précède l'instruction "clrf". Elle sert d'adresse dest
+                            ination à l'instruction "goto" apparaissant plus haut.
+000020 6A94           00076         clrf    TRISC           ; Force à zéro tous les bits de l'espace-mémoire associé à TRISC. Ceci c
+                            onfigurera tous les bits du port C en sorties. 
+000022 6A82           00077         clrf    PORTC           ; Force à zéro tous les bits de l'espace-mémoire associé à PORTC. 
+                      00078 
+000024 EC?? F???      00079         call    InitializeAD    ; Exécute la sous-routine débutant à l'adresse associés à "InitializeAD"
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00078 ;program code starts here
-                      00079 
-                      00080 Zone3   code 00020h             ; Ici, la nouvelle directive "code" définit une nouvelle adresse (dans l
-                            a mémoire-programme) pour 
-                      00081                                 ; la prochaine instruction. Cette dernière sera ainsi localisée à l'adre
-                            sse 020h
-                      00082                                 ; Cette nouvelle zone de code est nommée "Zone3".
-                      00083 
-000020                00084 Start                           ; Cette étiquette précède l'instruction "bcf". Elle sert d'adresse desti
-                            nation à l'instruction "goto" apparaissant plus haut.
-000020 9294           00085         bcf TRISC,1             ; définit le bit 1 du port C en sortie
-000022 9494           00086         bcf TRISC,2             ; définit le bit 2 du port C en sortie
-000024 6A95           00087         clrf TRISD              ; définit tous les bits du port D en sorties
-000026 6893           00088         setf TRISB              ; définit tous les bits du port B en entrées 
-                      00089 
-000028 0E3F           00090         movlw 0x3f              ; charge la valeur 0x3f dans le registre WREG
-00002A 6E??           00091         movwf Count             ; copie le contenu du registre WREG dans l'espace-mémoire associé à "Cou
-                            nt" 
-                      00092 
-00002C 0E07           00093         movlw 0x07              ; Charge la valeur 0x07 dans le registre WREG
-00002E 6ED5           00094         movwf T0CON             ; Copie le contenu du registre WREG dans l'espace-mémoire associé à T0CO
-                            N
-                      00095                                 ; Ces 8 bits (00000111) configure le micro-contrôleur de telle
-                      00096                                 ; sorte que le temporisateur 0 soit actif, qu'il opère avec 16 bits,
-                      00097                                 ; qu'il utilise un facteur d'échelle ainsi que l'horloge interne
-                      00098                                 ; => voir la page 149 de la documentation sur le micro-contrôleur http:/
+                            . Durant l'initialisation, le bit 0 du
+                      00080                                 ; port A est sélectionné comme entrée du convertisseur.
+                      00081         
+000028 EC?? F???      00082         call    SetupDelay      ; Exécute la sous-routine débutant à l'adresse associés à "SetupDelay". 
+                      00083                                 ; Cela laisse le temps au convertisseur de se réinitialiser (obligatoire
+                            ).
+                      00084                                 
+00002C 82C2           00085         bsf     ADCON0,GO       ; Met à 1 le bit portant le nom "GO" (bit 1) dans l'espace-mémoire assoc
+                            ié à "ADCON0". 
+                      00086                                 ; => voir la page 249 de la documentation sur le micro-contrôleur http:/
                             /ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
+                      00087                                 ; Ceci lance une opération de conversion analogique à digitale.
+                      00088 
+00002E                00089 Main
+00002E EF?? F???      00090         goto    Main            ; Force le micro-contrôleur à exécuter indéfiniment la même instruction.
+                      00091 
+                      00092 ;************************************************************
+                      00093 ; Service A/D interrupt
+                      00094 ; Get value and display on LEDs
+                      00095 
+                      00096         ; Ici débute la sous-routine gérant les interruptions.
+                      00097         ; On débute en vérificant si la source de l'interruption est le convertisseur analogique/digital
+000032                00098 ISR
                       00099 
-000030 0EFF           00100         movlw 0xff              ; Charge la valeur 0xff dans le registre WREG
-000032 6ED7           00101         movwf TMR0H             ; Copie le contenu du registre WREG dans l'espace-mémoire associé à TMR0
-                            H
-000034 0EF2           00102         movlw 0xf2              ; Charge la valeur 0xf2 dans le registre WREG
-000036 6ED6           00103         movwf TMR0L             ; Copie le contenu du registre WREG dans l'espace-mémoire associé à TMR0
-                            L
-                      00104                                 ; (le temporisateur opérant sur 16 bits, la valeur de départ est dont 0x
-                            fff2)
-                      00105                                 
-000038 94F2           00106         bcf INTCON,TMR0IF       ; Met à zéro le bit appelé TMR0IF (bit 2 de l'espace-mémoire associé à I
-                            NTCON)
-                      00107                                 ; => voir la page 105 de la documentation sur le micro-contrôleur http:/
+                      00100         ; store context (WREG and STATUS) if required
+                      00101         
+000032 AC9E           00102         btfss   PIR1,ADIF       ; Teste la valeur du bit portant le nom "ADIF" (bit 6) dans l'espace-mém
+                            oire associé à PIR1.
+                      00103                                 ; => voir la page 120 de la documentation sur le micro-contrôleur http:/
                             /ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-                      00108                                 ; Le drapeau ("flag") est donc réinitialisé à 0.
-                      00109                                 
-00003A 8ED5           00110         bsf T0CON,TMR0ON        ; Met à 1 le bit appelé TMR0ON (bit 7 de l'espace-mémoire associé à T0CO
-                            N)
-                      00111                                 ; => voir la page 149 de la documentation sur le micro-contrôleur http:/
+                      00104                                 ; Ainsi, si ce bit est à 1, le convertisseur analogique/digital est bien
+                             la source de l'interruption. 
+                      00105                                 ; Le micro-contrôleur saute alors la prochaine instruction.
+                      00106         
+000034 EF?? F???      00107         goto    OtherInt        ; Le micro-contrôleur saute à l'adresse associée à "OtherInt" s'il s'agi
+                            t d'une autre source d'interruption.
+                      00108         
+000038 50C4           00109         movf    ADRESH,W        ; Charge le contenu de l'espace-mémoire associé à "ADRESH" dans le regis
+                            tre WREG
+                      00110                                 ; On place ainsi le résultat de la conversion dans le registre WREG.
+                      00111                                 
+00003A 6E8B           00112         movwf   LATC            ; On copie le contenu du registre WREG dans l'espace-mémoire associé à "
+                            LATC".
+                      00113                                 ; Si des DELS sont branchés sur les bits du port C, ceux-ci vont ainsi s
+                            'allumer s'ils sont à 1. 
+                      00114                                 
+00003C 9C9E           00115         bcf     PIR1,ADIF       ; On met à zéro le bit portant le nom "ADIF" (bit 6) dans l'espace-mémoi
+                            re associé à PIR1.
+                      00116                                 ; => voir la page 120 de la documentation sur le micro-contrôleur http:/
                             /ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-                      00112                                 ; Le temporisateur 0 est donc démarré.
-                      00113                                 
-00003C 8AF2           00114         bsf INTCON,TMR0IE       ; Met à 1 le bit appelé TMR0IE (bit 5 de l'espace-mémoire associé à INTC
-                            ON)
-                      00115                                 ; => voir la page 105 de la documentation sur le micro-contrôleur http:/
-                            /ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE  4
+                      00117                                 ; Le drapeau ("flag") est ainsi remis à zéro avant de relancer une nouve
+                            lle conversion.
+                      00118 
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00116                                 ; Cette action autorise le temporisateur à interrompre le micro-contrôle
-                            ur lorsque le temporisateur viendra à échéance (00000000).
-                      00117                                 
-00003E 8EF2           00118         bsf INTCON,GIE          ; Met à 1 le bit appelé GIE (bit 7 de l'espace-mémoire associé à INTCON)
-                      00119                                 ; => voir la page 105 de la documentation sur le micro-contrôleur http:/
-                            /ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-                      00120                                 ; Cette action autorise toutes les sources possibles d'interruptions qui
-                             ont été validées.
+00003E EC?? F???      00119         call    SetupDelay      ; On appelle la sous-routine débutant à l'adresse associée à "SetupDelay
+                            ".
+                      00120                                 ; Cela laisse le temps au convertisseur de se réinitialiser (obligatoire
+                            ).
                       00121 
-000040                00122 loop
-                      00123         ;led verte
-000040 7482           00124         btg PORTC,2             ; Inverse ("toggle") la valeur courante du bit 2 stocké dans l'espace-mé
-                            moire associé au port C
-000042 CF81 FF83      00125         movff PORTB,PORTD       ; Copie le contenu du port B dans le port D
-000046 D???           00126         bra loop                ; Saute à l'adresse "loop" (soit l'adresse de l'instruction "btg")
-                      00127 
-                      00128 Zone4   code 0x100              ; Ici, la nouvelle directive "code" définit une nouvelle adresse (dans l
-                            a mémoire-programme) pour 
-                      00129                                 ; la prochaine instruction. Cette dernière sera ainsi localisée à l'adre
-                            sse 0x100
-                      00130                                 ; Cette nouvelle zone de code est nommée "Zone4".
-                      00131 
-000100                00132 TO_ISR                          ; Cette étiquette précède l'instruction "movlw". Elle sert d'adresse des
-                            tination à l'instruction "goto" apparaissant plus haut.
-                      00133                                 ; Les instructions qui suivent forment la sous-routine de gestion des in
-                            terruptions.
-                      00134 ;Interruption pour le rouge                             
-                      00135                                 ; Tout d'abord, on commence par réinitialiser la valeur initiale du temp
-                            orisateur
-000100 0EF1           00136         movlw 0xf1              ; Charge la valeur 0xff dans le registre WREG
-000102 6ED7           00137         movwf TMR0H             ; Copie le contenu du registre WREG dans l'espace-mémoire associé à TMR0
-                            H
-                      00138         ;movlw 0xf2             ; Charge la valeur 0xf2 dans le registre WREG
-000104 0E12           00139         movlw 0x12
-                      00140         ;modiffie la fréquence des interrutions
-000106 6ED6           00141         movwf TMR0L             ; Copie le contenu du registre WREG dans l'espace-mémoire associé à TMR0
-                            L
-                      00142                                 ; (le temporisateur opérant sur 16 bits, la valeur de départ est dont 0x
-                            fff2)
-                      00143         
-000108 94F2           00144         bcf INTCON,TMR0IF       ; Met à zéro le bit appelé TMR0IF (bit 2 de l'espace-mémoire associé à I
-                            NTCON)
-                      00145                                 ; => voir la page 105 de la documentation sur le micro-contrôleur http:/
+000042 82C2           00122         bsf     ADCON0,GO       ; Met à 1 le bit portant le nom "GO" (bit 1) dans l'espace-mémoire assoc
+                            ié à "ADCON0". 
+                      00123                                 ; => voir la page 249 de la documentation sur le micro-contrôleur http:/
                             /ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-                      00146                                 ; Le drapeau ("flag") est donc réinitialisé à 0.
-                      00147 
-                      00148         ;modification du timer de la led verte 
-                      00149         ;jouer sur le nombre d'interruptions plutot que la frequence d'interruptions
-00010A 06??           00150         decf Count              ; décrémente le contenu de l'espace-mémoire associé à "Count"
-00010C E1??           00151         bnz saut                ; saute à l'adresse associée à "saut" si le bit Z du registre de statut 
-                            est à 0
-                      00152                                 ; Il y a donc un branchement si la valeur "Count" n'est pas nulle ("non 
-                            zero").
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE  5
+                      00124                                 ; Ceci lance une nouvelle opération de conversion analogique à digitale.
+                      00125 
+000044 EF?? F???      00126         goto    EndISR          ; Le micro-contrôleur saute à l'adresse associée à "EndISR".
+                      00127 
+000048                00128 OtherInt
+                      00129         ; This would be replaced by code to check and service other interrupt sources
+000048 EF?? F???      00130         goto    $       ; Cette instruction boucle sur elle-même (boucle infinie).
+                      00131 
+00004C                00132 EndISR
+                      00133         ; Restore context if saved.
+                      00134 
+00004C 0010           00135         retfie          ; Retour à l'instruction ayant été interrompue.
+                      00136 
+                      00137 ;************************************************************
+                      00138 ; InitializeAD - initializes and sets up the A/D hardware.
+                      00139 ; Select AN0 to AN3 as analog inputs, RC clock, and read AN0.
+                      00140 
+00004E                00141 InitializeAD
+00004E 0E04           00142         movlw   B'00000100'     ; charge le nombre binaire 00000100 dans le registre WREG
+                      00143                                 
+000050 6EC1           00144         movwf   ADCON1          ; copie le contenu du registre WREG dans l'espace-mémoire associé à "ADC
+                            ON1".
+                      00145                                 ; Ceci configure le convertisseur analogique/digital de telle sorte que
+                      00146                                 ; tous les bits du port A soient des entrées. 
+                      00147                                 ; => voir la page 250 de la documentation sur le micro-contrôleur http:/
+                            /ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
+                      00148 
+000052 0EC1           00149         movlw   B'11000001'     ; charge le nombre binaire 11000001 dans le registre WREG
+                      00150 
+000054 6EC2           00151         movwf   ADCON0          ; copie le contenu du registre WREG dans l'espace-mémoire associé à "ADC
+                            ON0".
+                      00152                                 ; Ceci active le convertisseur et sélectionne le bit 0 du port A comme e
+                            ntrée du convertisseur
+                      00153 
+000056 9C9E           00154         bcf     PIR1,ADIF       ; On met à zéro le bit portant le nom "ADIF" (bit 6) dans l'espace-mémoi
+                            re associé à PIR1.
+                      00155                                 ; => voir la page 120 de la documentation sur le micro-contrôleur http:/
+                            /ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
+                      00156                                 ; Le drapeau ("flag") est ainsi remis à zéro avant de relancer une nouve
+                            lle conversion.
+                      00157  
+000058 8C9D           00158         bsf     PIE1,ADIE       ; On met à 1 le bit portant le nom "ADIE" (bit 6) dans l'espace-mémoire 
+                            associé à PIE1.
+                      00159                                 ; => voir la page 123 de la documentation sur le micro-contrôleur http:/
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00153                                 
-00010E 7282           00154         btg PORTC,1             ; Inverse ("toggle") la valeur courante du bit 1 stocké dans l'espace-mé
-                            moire associé au port C
-                      00155 
-000110 0E3F           00156         movlw 0x3f              ; charge la valeur 0x3f dans le registre WREG
-                      00157         ;
-000112 6E??           00158         movwf Count             ; copie le contenu du registre WREG dans l'espace-mémoire associé à "Cou
-                            nt"
-000114                00159 saut
-000114 0010           00160         retfie                  ; Provoque le retour à l'instruction qui a été interrompue par le tempor
-                            isateur 0
-                      00161 
-                      00162         END
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE  6
+                            /ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
+                      00160                                 ; Ceci autorise le convertisseur à interrompre le micro-contrôleur.
+                      00161         
+00005A 8CF2           00162         bsf     INTCON,PEIE     ; On met à 1 le bit portant le nom "PEIE" (bit 6) dans l'espace-mémoire 
+                            associé à INTCON.
+                      00163                                 ; => voir la page 105 de la documentation sur le micro-contrôleur http:/
+                            /ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
+                      00164                                 ; Ceci autorise les périphériques secondaires (comme le convertisseur) à
+                             interrompre le micro-contrôleur.
+                      00165 
+00005C 8EF2           00166         bsf     INTCON,GIE      ; On met à 1 le bit portant le nom "GIE" (bit 7) dans l'espace-mémoire a
+                            ssocié à INTCON.
+                      00167                                 ; => voir la page 105 de la documentation sur le micro-contrôleur http:/
+                            /ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
+                      00168                                 ; Cette action autorise toutes les sources possibles d'interruptions qui
+                             ont été validées à interrompre 
+                      00169                                 ; le micro-contrôleur selon leur mode de fonctionnement.
+                      00170 
+                      00171 
+00005E 0012           00172         return                  ; Marque la fin de la sous-routine. Le micro-contrôleur retournera exécu
+                            ter l'instruction qui suit le "call" qui a lancé la sous-routine.
+                      00173 
+                      00174 ;************************************************************
+                      00175 ; This is used to allow the A/D time to sample the input
+                      00176 ; (acquisition time).
+                      00177 ;
+                      00178 
+000060                00179 SetupDelay
+000060 0E1E           00180         movlw   .30             ; Charge la valeur 30 (en base 10) dans le registre WREG. 
+                      00181                                 ; Évidemment, lors de l'assemblage du présent programme (génération du c
+                            ode machine), le logiciel MPLAB convertit ce nombre en binaire.
+                      00182                                 ; Ainsi, la valeur 0x1D (soit 00011110 en binaire) est stockée dans le r
+                            egistre WREG
+                      00183 
+000062 6E??           00184         movwf   TEMP            ; Copie le registre WREG dans l'espace-mémoire associé à "TEMP" 
+000064                00185 SD
+000064 2E??           00186         decfsz  TEMP, F         ; Décrémente la valeur contenue dans l'espace-mémoire associé à "TEMP", 
+                            stocke ensuite le résultat dans le 
+                      00187                                 ; même espace, puis saute l'instruction suivante si ce résultat est nul 
+                            (zéro).
+                      00188                                 
+000066 EF?? F???      00189         goto    SD              ; Le micro-contrôleur saute à l'instruction dont l'adresse est associée 
+                            à "SD".
+00006A 0012           00190         return
+                      00191 
+                      00192         END
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE  6
 
 
 SYMBOL TABLE
@@ -312,7 +345,7 @@ B0D13                             00000003
 B0D14                             00000004
 B0D15                             00000005
 B0D16                             00000006
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE  7
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE  7
 
 
 SYMBOL TABLE
@@ -371,7 +404,7 @@ B0D72                             00000002
 B0D73                             00000003
 B0D74                             00000004
 B0D75                             00000005
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE  8
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE  8
 
 
 SYMBOL TABLE
@@ -430,7 +463,7 @@ B1D42                             00000002
 B1D43                             00000003
 B1D44                             00000004
 B1D45                             00000005
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE  9
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE  9
 
 
 SYMBOL TABLE
@@ -489,7 +522,7 @@ B2D12                             00000002
 B2D13                             00000003
 B2D14                             00000004
 B2D15                             00000005
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 10
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 10
 
 
 SYMBOL TABLE
@@ -548,7 +581,7 @@ B2D71                             00000001
 B2D72                             00000002
 B2D73                             00000003
 B2D74                             00000004
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 11
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 11
 
 
 SYMBOL TABLE
@@ -607,7 +640,7 @@ B3D41                             00000001
 B3D42                             00000002
 B3D43                             00000003
 B3D44                             00000004
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 12
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 12
 
 
 SYMBOL TABLE
@@ -666,7 +699,7 @@ B4D10                             00000000
 B4D11                             00000001
 B4D12                             00000002
 B4D13                             00000003
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 13
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 13
 
 
 SYMBOL TABLE
@@ -725,7 +758,7 @@ B4D7                              00000E6D
 B4D70                             00000000
 B4D71                             00000001
 B4D72                             00000002
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 14
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 14
 
 
 SYMBOL TABLE
@@ -784,7 +817,7 @@ B5D36                             00000006
 B5D37                             00000007
 B5D4                              00000E7A
 B5D40                             00000000
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 15
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 15
 
 
 SYMBOL TABLE
@@ -843,7 +876,7 @@ BIE0                              00000DFA
 BOR                               00000000
 BRG16                             00000003
 BRGCON1                           00000F70
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 16
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 16
 
 
 SYMBOL TABLE
@@ -902,7 +935,7 @@ CCP1IP                            00000002
 CCP1M0                            00000000
 CCP1M1                            00000001
 CCP1M2                            00000002
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 17
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 17
 
 
 SYMBOL TABLE
@@ -945,7 +978,6 @@ CVREN                             00000007
 CVROE                             00000006
 CVRR                              00000005
 CVRSS                             00000004
-Count                             00000060
 D                                 00000005
 DATA_ADDRESS                      00000005
 DC                                00000001
@@ -961,13 +993,13 @@ DFLC1                             00000001
 DFLC2                             00000002
 DFLC3                             00000003
 DFLC4                             00000004
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 18
+DLC0                              00000000
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 18
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-DLC0                              00000000
 DLC1                              00000001
 DLC2                              00000002
 DLC3                              00000003
@@ -1020,13 +1052,13 @@ EID12                             00000004
 EID13                             00000005
 EID14                             00000006
 EID15                             00000007
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 19
+EID16                             00000000
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 19
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-EID16                             00000000
 EID17                             00000001
 EID2                              00000002
 EID3                              00000003
@@ -1051,6 +1083,7 @@ EWIN4                             00000004
 EXID                              00000003
 EXIDE                             00000003
 EXIDEN                            00000003
+EndISR                            0000004C
 F                                 00000005
 F0BP_0                            00000000
 F0BP_1                            00000001
@@ -1079,7 +1112,7 @@ F14BP_3                           00000003
 F15BP_0                           00000004
 F15BP_1                           00000005
 F15BP_2                           00000006
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 20
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 20
 
 
 SYMBOL TABLE
@@ -1138,7 +1171,7 @@ FIL11_0                           00000006
 FIL11_1                           00000007
 FIL12_0                           00000000
 FIL12_1                           00000001
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 21
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 21
 
 
 SYMBOL TABLE
@@ -1197,7 +1230,7 @@ FSR1H                             00000FE2
 FSR1L                             00000FE1
 FSR2                              00000002
 FSR2H                             00000FDA
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 22
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 22
 
 
 SYMBOL TABLE
@@ -1256,7 +1289,7 @@ INT2IE                            00000004
 INT2IF                            00000001
 INT2IP                            00000007
 INT2P                             00000007
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 23
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 23
 
 
 SYMBOL TABLE
@@ -1282,7 +1315,9 @@ IRVST                             00000005
 IRXIE                             00000007
 IRXIF                             00000007
 IRXIP                             00000007
+ISR                               00000032
 IVRST                             00000005
+InitializeAD                      0000004E
 JTOFF                             00000001
 JTOFF_FILHIT1                     00000001
 KBI0                              00000004
@@ -1313,14 +1348,14 @@ LATC1                             00000001
 LATC2                             00000002
 LATC3                             00000003
 LATC4                             00000004
-LATC5                             00000005
-LATC6                             00000006
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 24
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 24
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+LATC5                             00000005
+LATC6                             00000006
 LATC7                             00000007
 LATD                              00000F8C
 LATD0                             00000000
@@ -1355,6 +1390,7 @@ MSEL0                             00000DF0
 MSEL1                             00000DF1
 MSEL2                             00000DF2
 MSEL3                             00000DF3
+Main                              0000002E
 N                                 00000004
 NOT_A                             00000005
 NOT_ADDRESS                       00000005
@@ -1371,15 +1407,15 @@ NOT_T3SYNC                        00000002
 NOT_TO                            00000003
 NOT_W                             00000002
 NOT_WRITE                         00000002
-OBF                               00000006
-OERR                              00000001
-OPMODE0                           00000005
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 25
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 25
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+OBF                               00000006
+OERR                              00000001
+OPMODE0                           00000005
 OPMODE1                           00000006
 OPMODE2                           00000007
 OSC1                              00000007
@@ -1391,6 +1427,7 @@ OSCFIP                            00000007
 OSCTUNE                           00000F9B
 OSTS                              00000003
 OV                                00000003
+OtherInt                          00000048
 P                                 00000004
 P1A                               00000004
 P1B                               00000005
@@ -1429,16 +1466,16 @@ PLUSW0                            00000FEB
 PLUSW1                            00000FE3
 PLUSW2                            00000FDB
 POR                               00000001
-PORTA                             00000F80
-PORTB                             00000F81
-PORTC                             00000F82
-PORTD                             00000F83
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 26
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 26
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+PORTA                             00000F80
+PORTB                             00000F81
+PORTC                             00000F82
+PORTD                             00000F83
 PORTE                             00000F84
 POSTDEC0                          00000FED
 POSTDEC1                          00000FE5
@@ -1488,16 +1525,16 @@ RB0_B1DLC                         00000004
 RB0_B2DLC                         00000004
 RB0_B3DLC                         00000004
 RB0_B4DLC                         00000004
-RB0_B5DLC                         00000004
-RB0_DDRB                          00000000
-RB0_PORTB                         00000000
-RB0_RXB0DLC                       00000004
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 27
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 27
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RB0_B5DLC                         00000004
+RB0_DDRB                          00000000
+RB0_PORTB                         00000000
+RB0_RXB0DLC                       00000004
 RB0_RXB1DLC                       00000004
 RB0_TRISB                         00000000
 RB1_B0DLC                         00000005
@@ -1547,16 +1584,16 @@ RD4                               00000004
 RD5                               00000005
 RD6                               00000006
 RD7                               00000007
-RE0                               00000000
-RE1                               00000001
-RE2                               00000002
-RE3                               00000003
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 28
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 28
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+RE3                               00000003
 READ_WRITE                        00000002
 REC0                              00000000
 REC1                              00000001
@@ -1606,16 +1643,16 @@ RXB0D24                           00000004
 RXB0D25                           00000005
 RXB0D26                           00000006
 RXB0D27                           00000007
-RXB0D3                            00000F69
-RXB0D30                           00000000
-RXB0D31                           00000001
-RXB0D32                           00000002
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 29
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 29
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RXB0D3                            00000F69
+RXB0D30                           00000000
+RXB0D31                           00000001
+RXB0D32                           00000002
 RXB0D33                           00000003
 RXB0D34                           00000004
 RXB0D35                           00000005
@@ -1665,16 +1702,16 @@ RXB0EIDL                          00000F64
 RXB0IE                            00000000
 RXB0IF                            00000000
 RXB0IP                            00000000
-RXB0OVFL                          00000007
-RXB0OVFL_NOT_FIFOEMPTY            00000007
-RXB0SIDH                          00000F61
-RXB0SIDL                          00000F62
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 30
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 30
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RXB0OVFL                          00000007
+RXB0OVFL_NOT_FIFOEMPTY            00000007
+RXB0SIDH                          00000F61
+RXB0SIDL                          00000F62
 RXB1CON                           00000F50
 RXB1D0                            00000F56
 RXB1D00                           00000000
@@ -1724,16 +1761,16 @@ RXB1D47                           00000007
 RXB1D5                            00000F5B
 RXB1D50                           00000000
 RXB1D51                           00000001
-RXB1D52                           00000002
-RXB1D53                           00000003
-RXB1D54                           00000004
-RXB1D55                           00000005
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 31
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 31
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RXB1D52                           00000002
+RXB1D53                           00000003
+RXB1D54                           00000004
+RXB1D55                           00000005
 RXB1D56                           00000006
 RXB1D57                           00000007
 RXB1D6                            00000F5C
@@ -1783,16 +1820,16 @@ RXF10SIDL                         00000D75
 RXF11EIDH                         00000D7A
 RXF11EIDL                         00000D7B
 RXF11EN                           00000003
-RXF11SIDH                         00000D78
-RXF11SIDL                         00000D79
-RXF12EIDH                         00000D82
-RXF12EIDL                         00000D83
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 32
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 32
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RXF11SIDH                         00000D78
+RXF11SIDL                         00000D79
+RXF12EIDH                         00000D82
+RXF12EIDL                         00000D83
 RXF12EN                           00000004
 RXF12SIDH                         00000D80
 RXF12SIDL                         00000D81
@@ -1842,16 +1879,16 @@ RXF6EN                            00000006
 RXF6SIDH                          00000D60
 RXF6SIDL                          00000D61
 RXF7EIDH                          00000D66
-RXF7EIDL                          00000D67
-RXF7EN                            00000007
-RXF7SIDH                          00000D64
-RXF7SIDL                          00000D65
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 33
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 33
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RXF7EIDL                          00000D67
+RXF7EN                            00000007
+RXF7SIDH                          00000D64
+RXF7SIDL                          00000D65
 RXF8EIDH                          00000D6A
 RXF8EIDL                          00000D6B
 RXF8EN                            00000000
@@ -1901,20 +1938,21 @@ RXRTR_TXRTR                       00000006
 RXWARN                            00000001
 R_NOT_W                           00000002
 R_W                               00000002
-S                                 00000003
-SAM                               00000006
-SBOREN                            00000006
-SCK                               00000003
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 34
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 34
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+S                                 00000003
+SAM                               00000006
+SBOREN                            00000006
+SCK                               00000003
 SCKP                              00000004
 SCL                               00000003
 SCS0                              00000000
 SCS1                              00000001
+SD                                00000064
 SDA                               00000004
 SDFLC                             00000DD8
 SDI                               00000004
@@ -1959,17 +1997,17 @@ SSPIF                             00000003
 SSPIP                             00000003
 SSPM0                             00000000
 SSPM1                             00000001
-SSPM2                             00000002
-SSPM3                             00000003
-SSPOV                             00000006
-SSPSTAT                           00000FC7
-STATUS                            00000FD8
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 35
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 35
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000FC7
+STATUS                            00000FD8
 STKFUL                            00000007
 STKOVF                            00000007
 STKPTR                            00000FFC
@@ -1982,6 +2020,7 @@ STKUNF                            00000006
 SWDTE                             00000000
 SWDTEN                            00000000
 SYNC                              00000004
+SetupDelay                        00000060
 Start                             00000020
 T08BIT                            00000006
 T0CKI                             00000004
@@ -2017,18 +2056,18 @@ T3CCP2                            00000006
 T3CKPS0                           00000004
 T3CKPS1                           00000005
 T3CON                             00000FB1
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 36
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 T3ECCP1                           00000006
 T3NSYNC                           00000002
 T3SYNC                            00000002
 TABLAT                            00000FF5
 TBLPTR                            00000FF6
 TBLPTRH                           00000FF7
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 36
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TBLPTRL                           00000FF6
 TBLPTRU                           00000FF8
 TEC0                              00000000
@@ -2039,6 +2078,7 @@ TEC4                              00000004
 TEC5                              00000005
 TEC6                              00000006
 TEC7                              00000007
+TEMP                              00000060
 TMR0                              00000FD6
 TMR0H                             00000FD7
 TMR0IE                            00000005
@@ -2075,19 +2115,18 @@ TOSU                              00000FFF
 TOUTPS0                           00000003
 TOUTPS1                           00000004
 TOUTPS2                           00000005
-TOUTPS3                           00000006
-TO_ISR                            00000100
-TRISA                             00000F92
-TRISA0                            00000000
-TRISA1                            00000001
-TRISA2                            00000002
-TRISA3                            00000003
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 37
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 37
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TOUTPS3                           00000006
+TRISA                             00000F92
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
 TRISA4                            00000004
 TRISA5                            00000005
 TRISA6                            00000006
@@ -2135,18 +2174,18 @@ TX9D                              00000000
 TXABT                             00000006
 TXB0CON                           00000F40
 TXB0D0                            00000F46
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 38
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TXB0D00                           00000000
 TXB0D01                           00000001
 TXB0D02                           00000002
 TXB0D03                           00000003
 TXB0D04                           00000004
 TXB0D05                           00000005
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 38
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TXB0D06                           00000006
 TXB0D07                           00000007
 TXB0D1                            00000F47
@@ -2194,18 +2233,18 @@ TXB0D54                           00000004
 TXB0D55                           00000005
 TXB0D56                           00000006
 TXB0D57                           00000007
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 39
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TXB0D6                            00000F4C
 TXB0D60                           00000000
 TXB0D61                           00000001
 TXB0D62                           00000002
 TXB0D63                           00000003
 TXB0D64                           00000004
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 39
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TXB0D65                           00000005
 TXB0D66                           00000006
 TXB0D67                           00000007
@@ -2253,18 +2292,18 @@ TXB1D23                           00000003
 TXB1D24                           00000004
 TXB1D25                           00000005
 TXB1D26                           00000006
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 40
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TXB1D27                           00000007
 TXB1D3                            00000F39
 TXB1D30                           00000000
 TXB1D31                           00000001
 TXB1D32                           00000002
 TXB1D33                           00000003
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 40
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TXB1D34                           00000004
 TXB1D35                           00000005
 TXB1D36                           00000006
@@ -2312,18 +2351,18 @@ TXB1IE                            00000003
 TXB1IF                            00000003
 TXB1IP                            00000003
 TXB1SIDH                          00000F31
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 41
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TXB1SIDL                          00000F32
 TXB2CON                           00000F20
 TXB2D0                            00000F26
 TXB2D00                           00000000
 TXB2D01                           00000001
 TXB2D02                           00000002
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 41
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TXB2D03                           00000003
 TXB2D04                           00000004
 TXB2D05                           00000005
@@ -2371,18 +2410,18 @@ TXB2D51                           00000001
 TXB2D52                           00000002
 TXB2D53                           00000003
 TXB2D54                           00000004
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 42
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TXB2D55                           00000005
 TXB2D56                           00000006
 TXB2D57                           00000007
 TXB2D6                            00000F2C
 TXB2D60                           00000000
 TXB2D61                           00000001
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 42
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TXB2D62                           00000002
 TXB2D63                           00000003
 TXB2D64                           00000004
@@ -2430,18 +2469,18 @@ TXREG                             00000FAD
 TXREQ                             00000003
 TXRTR                             00000006
 TXSTA                             00000FAC
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 43
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TXWARN                            00000002
 UA                                00000001
 VCFG0                             00000004
 VCFG1                             00000005
 VDIRMAG                           00000007
 VREFM                             00000002
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 43
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 VREFP                             00000003
 W                                 00000000
 WAKDIS                            00000007
@@ -2489,18 +2528,18 @@ _CP0_OFF_5L                       000000FF
 _CP0_ON_5L                        000000FE
 _CP1_OFF_5L                       000000FF
 _CP1_ON_5L                        000000FD
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 44
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 _CP2_OFF_5L                       000000FF
 _CP2_ON_5L                        000000FB
 _CP3_OFF_5L                       000000FF
 _CP3_ON_5L                        000000F7
 _CPB_OFF_5H                       000000FF
 _CPB_ON_5H                        000000BF
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 44
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 _CPD_OFF_5H                       000000FF
 _CPD_ON_5H                        0000007F
 _DEBUG_OFF_4L                     000000FF
@@ -2548,18 +2587,18 @@ _OSC_XT_1H                        000000F1
 _PBADEN_OFF_3H                    000000FD
 _PBADEN_ON_3H                     000000FF
 _PWRT_OFF_2L                      000000FF
+MPASM 5.77                           A2D.ASM   11-16-2018  9:59:07         PAGE 45
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 _PWRT_ON_2L                       000000FE
 _STVREN_OFF_4L                    000000FE
 _STVREN_ON_4L                     000000FF
 _WDTPS_1024_2H                    000000F5
 _WDTPS_128_2H                     000000EF
 _WDTPS_16384_2H                   000000FD
-MPASM 5.77                     LED-TIMER.ASM   11-16-2018  10:18:41         PAGE 45
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 _WDTPS_16_2H                      000000E9
 _WDTPS_1_2H                       000000E1
 _WDTPS_2048_2H                    000000F7
@@ -2591,9 +2630,8 @@ _WRTD_OFF_6H                      000000FF
 _WRTD_ON_6H                       0000007F
 _XINST_OFF_4L                     000000BF
 _XINST_ON_4L                      000000FF
+_Zone3_0048                       00000048
 __18F4680                         00000001
-loop                              00000040
-saut                              00000114
 
 Errors   :     0
 Warnings :     0 reported,     0 suppressed

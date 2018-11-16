@@ -133,7 +133,7 @@ TO_ISR				; Cette étiquette précède l'instruction "movlw". Elle sert d'adresse d
 				; Les instructions qui suivent forment la sous-routine de gestion des interruptions.
 ;Interruption pour le rouge				
 				; Tout d'abord, on commence par réinitialiser la valeur initiale du temporisateur
-	movlw 0xfe		; Charge la valeur 0xff dans le registre WREG
+	movlw 0xf1		; Charge la valeur 0xff dans le registre WREG
 	movwf TMR0H		; Copie le contenu du registre WREG dans l'espace-mémoire associé à TMR0H
 	;movlw 0xf2		; Charge la valeur 0xf2 dans le registre WREG
 	movlw 0x12
