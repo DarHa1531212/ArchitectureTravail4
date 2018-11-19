@@ -1,5 +1,5 @@
 MPLINK 5.08, LINKER
-Linker Map File - Created Mon Nov 19 10:37:48 2018
+Linker Map File - Created Mon Nov 19 10:50:37 2018
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
@@ -8,13 +8,15 @@ Linker Map File - Created Mon Nov 19 10:37:48 2018
                    .cinit    romdata   0x000004    program   0x000002
                     Zone2       code   0x000008    program   0x000008
                     Zone3       code   0x000020    program   0x000028
-                    Zone4       code   0x000100    program   0x000016
-.config_300001_BUILD/DEFAULT/PRODUCTION/NEWPIC_    romdata   0x300001    program   0x000001
-.config_300002_BUILD/DEFAULT/PRODUCTION/NEWPIC_    romdata   0x300002    program   0x000001
-.config_300003_BUILD/DEFAULT/PRODUCTION/NEWPIC_    romdata   0x300003    program   0x000001
-.config_300005_BUILD/DEFAULT/PRODUCTION/NEWPIC_    romdata   0x300005    program   0x000001
-.config_300006_BUILD/DEFAULT/PRODUCTION/NEWPIC_    romdata   0x300006    program   0x000001
+                    Zone4       code   0x000100    program   0x00001a
+                    dbgP0       code   0x00fd30    program   0x0002d0
+.config_300001_BUILD/DEFAULT/DEBUG/NEWPIC_8B_GE    romdata   0x300001    program   0x000001
+.config_300002_BUILD/DEFAULT/DEBUG/NEWPIC_8B_GE    romdata   0x300002    program   0x000001
+.config_300003_BUILD/DEFAULT/DEBUG/NEWPIC_8B_GE    romdata   0x300003    program   0x000001
+.config_300005_BUILD/DEFAULT/DEBUG/NEWPIC_8B_GE    romdata   0x300005    program   0x000001
+.config_300006_BUILD/DEFAULT/DEBUG/NEWPIC_8B_GE    romdata   0x300006    program   0x000001
               ZONE1_UDATA      udata   0x000060       data   0x000001
+                    dbgD0      udata   0x000cf4       data   0x00000c
 
 
 
@@ -24,10 +26,11 @@ Linker Map File - Created Mon Nov 19 10:37:48 2018
                             0x000000    0x000005      
                             0x000008    0x00000f      
                             0x000020    0x000047      
-                            0x000100    0x000115      
+                            0x000100    0x000119      
+                            0x00fd30    0x00ffff      
                             0x300001    0x300003      
                             0x300005    0x300006      
-            81 out of 66584 program addresses used, program memory utilization is 0%
+            805 out of 66584 program addresses used, program memory utilization is 1%
 
 
 
@@ -36,7 +39,8 @@ Linker Map File - Created Mon Nov 19 10:37:48 2018
                 ---------  ---------  ---------  --------- ---------                
                     START   0x000020    program     static C:\Users\labop2\Downloads\ttravail4\Travail4.X\newpic_8b_general.asm
                    TO_ISR   0x000100    program     static C:\Users\labop2\Downloads\ttravail4\Travail4.X\newpic_8b_general.asm
-                     loop   0x000040    program     static C:\Users\labop2\Downloads\ttravail4\Travail4.X\newpic_8b_general.asm
+                  bigloop   0x000040    program     static C:\Users\labop2\Downloads\ttravail4\Travail4.X\newpic_8b_general.asm
+                     loop   0x000042    program     static C:\Users\labop2\Downloads\ttravail4\Travail4.X\newpic_8b_general.asm
                      saut   0x000114    program     static C:\Users\labop2\Downloads\ttravail4\Travail4.X\newpic_8b_general.asm
                     Count   0x000060       data     static C:\Users\labop2\Downloads\ttravail4\Travail4.X\newpic_8b_general.asm
 
@@ -46,7 +50,8 @@ Linker Map File - Created Mon Nov 19 10:37:48 2018
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
                     START   0x000020    program     static C:\Users\labop2\Downloads\ttravail4\Travail4.X\newpic_8b_general.asm
-                     loop   0x000040    program     static C:\Users\labop2\Downloads\ttravail4\Travail4.X\newpic_8b_general.asm
+                  bigloop   0x000040    program     static C:\Users\labop2\Downloads\ttravail4\Travail4.X\newpic_8b_general.asm
+                     loop   0x000042    program     static C:\Users\labop2\Downloads\ttravail4\Travail4.X\newpic_8b_general.asm
                    TO_ISR   0x000100    program     static C:\Users\labop2\Downloads\ttravail4\Travail4.X\newpic_8b_general.asm
                      saut   0x000114    program     static C:\Users\labop2\Downloads\ttravail4\Travail4.X\newpic_8b_general.asm
                     Count   0x000060       data     static C:\Users\labop2\Downloads\ttravail4\Travail4.X\newpic_8b_general.asm

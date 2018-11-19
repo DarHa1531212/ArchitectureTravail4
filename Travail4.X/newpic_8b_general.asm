@@ -75,9 +75,9 @@ Zone3	code 00020h
 				    ; qu'il utilise un facteur d'échelle ainsi que l'horloge interne
 				    ; => voir la page 149 de la documentation sur le micro-contrôleur http://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
 
-	    movlw 0xff		
+	    movlw 0xf1		
 	    movwf TMR0H		; T0CON = 0xff
-	    movlw 0xf2		
+	    movlw 0x12		
 	    movwf TMR0L		; TMR0L = 0xf2
 				; (le temporisateur opérant sur 16 bits, la valeur de départ est dont 0xfff2)
 
@@ -96,11 +96,11 @@ Zone3	code 00020h
 	    bsf INTCON,GIE		; Met à 1 le bit appelé GIE (bit 7 de l'espace-mémoire associé à INTCON)
 				    ; => voir la page 105 de la documentation sur le micro-contrôleur http://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
 				    ; Cette action autorise toutes les sources possibles d'interruptions qui ont été validées.
-
-    loop
-	    btg PORTC,2		; Inverse ("toggle") la valeur courante du bit 2 stocké dans l'espace-mémoire associé au port C
-	    movff PORTB,PORTD	; Copie le contenu du port B dans le port D
-	    bra loop		; Saute à l'adresse "loop" (soit l'adresse de l'instruction "btg")
+    bigloop
+	btg PORTC,2		; Inverse ("toggle") la valeur courante du bit 2 stocké dans l'espace-mémoire associé au port C			    
+	loop  
+	movff	PORTB,PORTD	
+	bra loop		; Saute à l'adresse "loop" (soit l'adresse de l'instruction "btg")
 
    Zone4	code 0x100	
 	
@@ -108,9 +108,9 @@ Zone3	code 00020h
 				; Les instructions qui suivent forment la sous-routine de gestion des interruptions.
 				
 				; Tout d'abord, on commence par réinitialiser la valeur initiale du temporisateur
-	movlw 0xff		; Charge la valeur 0xff dans le registre WREG
+	movlw 0xf1		; Charge la valeur 0xff dans le registre WREG
 	movwf TMR0H		; Copie le contenu du registre WREG dans l'espace-mémoire associé à TMR0H
-	movlw 0xf2		; Charge la valeur 0xf2 dans le registre WREG
+	movlw 0x12		; Charge la valeur 0xf2 dans le registre WREG
 	movwf TMR0L		; Copie le contenu du registre WREG dans l'espace-mémoire associé à TMR0L
 				; (le temporisateur opérant sur 16 bits, la valeur de départ est dont 0xfff2)
 	
@@ -127,6 +127,8 @@ Zone3	code 00020h
 	movlw 0x3f		; charge la valeur 0x3f dans le registre WREG
 	movwf Count		; copie le contenu du registre WREG dans l'espace-mémoire associé à "Count"
 saut
+	
+	goto bigloop
 	retfie			; Provoque le retour à l'instruction qui a été interrompue par le temporisateur 0
 
 	END
