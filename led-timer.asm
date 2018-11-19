@@ -1,18 +1,9 @@
-;
-; Daniel Audet
-; Juillet 2010
-;
-;****************************************************************************
-; MCU TYPE
-;****************************************************************************
-	LIST	p=18F4680     ; définit le numéro du PIC pour lequel ce programme sera assemblé
+    LIST	p=18F4680     ; définit le numéro du PIC pour lequel ce programme sera assemblé
 
 ;****************************************************************************
 ; INCLUDES
 ;****************************************************************************
-#include	 <p18f4680.inc>	;  La directive "include" permet d'insérer la librairie "p18f4680.inc" dans le présent programme.
-				; Cette librairie contient l'adresse de chacun des SFR ainsi que l'identité (nombre) de chaque bit 
-				; de configuration portant un nom prédéfini.
+#include	 <p18f4680.inc>	
 
 ;****************************************************************************
 ; MCU DIRECTIVES   (définit l'état de certains bits de configuration qui seront chargés lorsque le PIC débutera l'exécution)
@@ -35,57 +26,35 @@
   
 
 ;************************************************************
-ZONE1_UDATA	udata 0x60 	; La directive "udata" (unsigned data) permet de définir l'adresse du début d'une zone-mémoire
-				; de la mémoire-donnée (ici 0x60).
-				; Les directives "res" qui suivront, définiront des espaces-mémoire à partir de cette adresse.
-				; La zone doit porter un nom unique (ici "ZONE1_UDATA") car on peut en définir plusieurs.
-				
-Count	 	res 1 		; La directive "res" réserve un seul octet qui pourra être référencé à l'aide du mot "Count".
-				; L'octet sera localisé à l'adresse 0x60 (dans la banque 0).
+ZONE1_UDATA	udata 0x60 			
+Count	 	res 1 		
 	
 ;************************************************************
 ; reset vector
  
-Zone1	code 00000h		; La directive "code" définit l'adresse de la prochaine instruction qui suit cette directive.
-				; Toutes les autres instructions seront positionnées à la suite.
-				; Elles formeront une zone dont le nom sera "Zone1".
-				; Ici, l'instruction "goto" sera donc stockée à l'adresse 00000h dans la mémoire-programme. 
-				
-	goto Start		; Le micro-contrôleur saute à l'adresse-programme définie par l'étiquette "Start".
-
+Zone1	code 00000h		
+goto Start		
+	
 ;************************************************************
 ; interrupt vector
  
-Zone2	code	00008h		; La directive "code" définit l'adresse de la prochaine instruction qui suit cette directive.
-				; Toutes les autres instructions seront positionnées à la suite.
-				; Elles formeront une zone dont le nom sera "Zone2".
-				; Ici, l'instruction "btfss" sera donc stockée à l'adresse 00008h dans la mémoire-programme.
-				;
-				; NOTE IMPORTANTE: Lorsque le micro-contrôleur subit une interruption, il interrompt le programme
-				;                  en cours et saute à l'adresse 00008h pour exécuter l'instruction qui s'y trouve.
-				;                  
+Zone2	code	00008h		            
 	
-	btfss INTCON,TMR0IF	; teste la valeur du bit nommé "TMR0IF" de l'espace-mémoire associée à INTCOM. Ce bit est en fait 
-				; le bit numéro 2 selon la description détaillée du micro-contrôleur PIC. Si ce bit est à 1 (set), on saute
-				; l'instruction suivante (retfie). On exécutera alors l'instruction qui suit (goto TO_ISR) qui amènera le 
-				; micro-contrôleur à la première instruction de la sous-routine de gestion de l'interruption associée au
-				; temporisateur 0.
-				
+	btfss INTCON,TMR0IF	
+	bz PORTC			
 	retfie			; cette instruction force le retour à l'instruction qui a été interrompue lors de l'interruption.
 	goto TO_ISR		; saute à l'adresse-mémoire associée à l'étiquette "TO_ISR"
 
 ;************************************************************
 ;program code starts here
 
-Zone3	code 00020h		; Ici, la nouvelle directive "code" définit une nouvelle adresse (dans la mémoire-programme) pour 
-				; la prochaine instruction. Cette dernière sera ainsi localisée à l'adresse 020h
-				; Cette nouvelle zone de code est nommée "Zone3".
+Zone3	code 00020h		
 
-Start				; Cette étiquette précède l'instruction "bcf". Elle sert d'adresse destination à l'instruction "goto" apparaissant plus haut.
-	bcf TRISC,1		; définit le bit 1 du port C en sortie
-	bcf TRISC,2		; définit le bit 2 du port C en sortie
-	clrf TRISD		; définit tous les bits du port D en sorties
-	setf TRISB		; définit tous les bits du port B en entrées 
+Start				
+	bcf TRISC,1		
+	bcf TRISC,2		
+	clrf TRISD		
+	setf TRISB		
 
 	movlw 0x3f		; charge la valeur 0x3f dans le registre WREG
 	movwf Count		; copie le contenu du registre WREG dans l'espace-mémoire associé à "Count" 
@@ -133,7 +102,7 @@ TO_ISR				; Cette étiquette précède l'instruction "movlw". Elle sert d'adresse d
 				; Les instructions qui suivent forment la sous-routine de gestion des interruptions.
 ;Interruption pour le rouge				
 				; Tout d'abord, on commence par réinitialiser la valeur initiale du temporisateur
-	movlw 0xfe		; Charge la valeur 0xff dans le registre WREG
+	movlw 0xf1		; Charge la valeur 0xff dans le registre WREG
 	movwf TMR0H		; Copie le contenu du registre WREG dans l'espace-mémoire associé à TMR0H
 	;movlw 0xf2		; Charge la valeur 0xf2 dans le registre WREG
 	movlw 0x12
