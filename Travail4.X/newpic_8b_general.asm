@@ -61,6 +61,7 @@ Zone3	code 00020h
 	    bcf TRISC,1		; définit les bits 1 à 3 du port C en sortie
 	    bcf TRISC,2		
 	    bcf TRISC,3
+	    
 	    bsf PORTC,1	
     	    bcf PORTC,2	    
     	    bcf PORTC,3
@@ -80,7 +81,7 @@ Zone3	code 00020h
 				    ; qu'il utilise un facteur d'échelle ainsi que l'horloge interne
 				    ; => voir la page 149 de la documentation sur le micro-contrôleur http://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
 
-	    movlw 0xf1		
+	    movlw 0xa1		
 	    movwf TMR0H		; T0CON = 0xff
 	    movlw 0x12		
 	    movwf TMR0L		; TMR0L = 0xf2
@@ -117,59 +118,41 @@ Zone3	code 00020h
 	movwf TMR0L		; Copie le contenu du registre WREG dans l'espace-mémoire associé à TMR0L
 				; (le temporisateur opérant sur 16 bits, la valeur de départ est dont 0xfff2)
 	
-	bcf INTCON,TMR0IF	; Met à zéro le bit appelé TMR0IF (bit 2 de l'espace-mémoire associé à INTCON)
-				; => voir la page 105 de la documentation sur le micro-contrôleur http://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-				; Le drapeau ("flag") est donc réinitialisé à 0.
+	bcf INTCON,TMR0IF	
 
-	decf Count		; décrémente le contenu de l'espace-mémoire associé à "Count"
-	bnz saut		; saute à l'adresse associée à "saut" si le bit Z du registre de statut est à 0
-				; Il y a donc un branchement si la valeur "Count" n'est pas nulle ("non zero").
-	goto determinerCouleurAChanger
-				
-	btg PORTC,1		; Inverse ("toggle") la valeur courante du bit 1 stocké dans l'espace-mémoire associé au port C
+	decf Count		
+	bnz saut
+	
+	goto DeterminerCouleurAChanger
 
-	movlw 0xa		; charge la valeur 0x3f dans le registre WREG
-	movwf Count		; copie le contenu du registre WREG dans l'espace-mémoire associé à "Count"
-
-	determinerCouleurAChanger
-	;si 0, on skip, donc rentre seulement si 1
-	;si 1 sur le port 1, verte est actuellement ouverte, on veut donc outvit la rouge.
+	DeterminerCouleurAChanger
 	BTFSC PORTC,1
 	goto allumerJaune
 	
 	BTFSC PORTC,2
 	goto allumerRouge
 	
-	BTFSC PORTC,3
 	goto allumerVerte
 
 	allumerJaune
-	bsf PORTC, 2    
-	BCF PORTC, 1	
+	    bsf PORTC, 2    
+	    BCF PORTC, 1	
 	    movlw 0x3		
 	    movwf Count
-	    goto saut
+	    retfie
 	
 	allumerRouge
-	bsf PORTC, 3    
-	BCF PORTC, 2
-	;btg PORTC,2		
-	 ;   btg PORTC,3		
+	    bsf PORTC, 3    
+	    BCF PORTC, 2		
 	    movlw 0xa		
 	    movwf Count
-	    goto saut
+	    retfie
 	    
 	allumerVerte
-	bsf PORTC, 1    
-	BCF PORTC, 3	
+	    bsf PORTC, 1    
+	    BCF PORTC, 3	
 	    movlw 0xa		
 	    movwf Count
-	    goto saut
-	    
-	saut
-				; Provoque le retour à l'instruction qui a été interrompue par le temporisateur 0
-
-	retfie
-
+	    retfie
 
     END
