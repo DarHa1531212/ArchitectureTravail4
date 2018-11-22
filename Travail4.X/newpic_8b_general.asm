@@ -51,21 +51,34 @@ Zone1	code 00000h
     goto START
 
 Zone2	code	00008h
-	btfss INTCON,TMR0IF
+	btfsc INTCON,TMR0IF
 	    goto TO_ISR
 	btfsc	PIR1,ADIF
 	    goto PotInterrupt
 	retfie
 	
 ;************************************************************
-;program code starts here
 
 Zone3	code 00020h 
 
 				
 	START
-
-	call	InitializeAD 	
+	    movlw 0xa		
+	    movwf Count		;count = 0x3f
+	    movlw 0x07		
+	    movwf T0CON		;   T0CON = 0x07				
+	    movlw 0xa1		
+	    movwf TMR0H		; T0CON = 0xff
+	    movlw 0x12		
+	    movwf TMR0L		; TMR0L = 0xf2
+			
+	    
+	    bcf INTCON,TMR0IF
+	    bsf T0CON,TMR0ON
+	    bsf INTCON,TMR0IE
+	    bsf INTCON,GIE
+	    
+	    call	InitializeAD 	
 	    call	SetupDelay
 	    bsf		ADCON0,GO    
 
@@ -79,45 +92,12 @@ Zone3	code 00020h
 
 	    movlw 0x3
 	    movwf TempsCourt
-	    movlw 0xa
+	    movlw 0x8
 	    movwf TempsLong
 
-	    ;clrf TRISD		; définit tous les bits du port D en sorties
 	    bsf TRISB, 0	;Bit 0 du port B en entrée
 
-	    movlw 0xa		
-	    movwf Count		;count = 0x3f
-
-	    movlw 0x07		
-	    movwf T0CON		;   T0CON = 0x07
-				; active le temporisateur 0 et opère ae 16 bits
-				    ; Ces 8 bits (00000111) configure le micro-contrôleur de telle
-				    ; sorte que le temporisateur 0 soit actif, qu'il opère avec 16 bits,
-				    ; qu'il utilise un facteur d'échelle ainsi que l'horloge interne
-				    ; => voir la page 149 de la documentation sur le micro-contrôleur http://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-
-	    movlw 0xa1		
-	    movwf TMR0H		; T0CON = 0xff
-	    movlw 0x12		
-	    movwf TMR0L		; TMR0L = 0xf2
-				; (le temporisateur opérant sur 16 bits, la valeur de départ est dont 0xfff2)
-
-	    bcf INTCON,TMR0IF	; Met à zéro le bit appelé TMR0IF (bit 2 de l'espace-mémoire associé à INTCON)
-				    ; => voir la page 105 de la documentation sur le micro-contrôleur http://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-				    ; Le drapeau ("flag") est donc réinitialisé à 0.
-
-	    bsf T0CON,TMR0ON	; Met à 1 le bit appelé TMR0ON (bit 7 de l'espace-mémoire associé à T0CON)
-				    ; => voir la page 149 de la documentation sur le micro-contrôleur http://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-				    ; Le temporisateur 0 est donc démarré.
-
-	    bsf INTCON,TMR0IE	; Met à 1 le bit appelé TMR0IE (bit 5 de l'espace-mémoire associé à INTCON)
-				    ; => voir la page 105 de la documentation sur le micro-contrôleur http://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-				    ; Cette action autorise le temporisateur à interrompre le micro-contrôleur lorsque le temporisateur viendra à échéance (00000000).
-
-	    bsf INTCON,GIE		; Met à 1 le bit appelé GIE (bit 7 de l'espace-mémoire associé à INTCON)
-				    ; => voir la page 105 de la documentation sur le micro-contrôleur http://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-					; Cette action autorise toutes les sources possibles d'interruptions qui ont été validées.
-	loop  
+	    loop  
 	    movff	PORTB,PORTD	
 	    bra loop		
 	
@@ -134,15 +114,13 @@ Zone3	code 00020h
 	     
 	SetupDelay
 	    movlw	.30		
-	    movwf	TEMP		
-	SD
-	    decfsz	TEMP, F		
-	    goto	SD		
+	    movwf	TEMP				
 	    return
 
    Zone4	code 0x100	
 	
 	PotInterrupt
+	    bcf	PIR1,ADIF
 	    ;movf	ADRESH,W
 	    movlw b'11110000'
 	    CPFSGT ADRESH
@@ -150,16 +128,11 @@ Zone3	code 00020h
 	    CPFSLT ADRESH 
 		call AccelerereLumiere
 	    ;si plus grand
-	    
-	    movwf	LATC
-	    bcf	PIR1,ADIF
-	    call	SetupDelay
-	    bsf	ADCON0,GO
 	    goto saut
 	AccelerereLumiere
-	    movlw 0x1
+	    movlw d'1'
 	    movwf TempsCourt	
-	    movlw 0x3
+	    movlw d'3'
 	    movwf TempsLong
 	    goto saut
 	RalentirLumiere
@@ -170,11 +143,11 @@ Zone3	code 00020h
 	    goto saut
 	
 	TO_ISR					
+	    bcf INTCON,TMR0IF	
 	    movlw 0xA1		
 	    movwf TMR0H		
 	    movlw 0x12		
 	    movwf TMR0L		
-	    bcf INTCON,TMR0IF	
 	    decf Count		
 	    bnz saut
 	    goto DeterminerCouleurAChanger
