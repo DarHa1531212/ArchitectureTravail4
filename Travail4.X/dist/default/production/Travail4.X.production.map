@@ -1,20 +1,20 @@
 MPLINK 5.08, LINKER
-Linker Map File - Created Thu Nov 22 08:40:36 2018
+Linker Map File - Created Thu Nov 22 09:58:19 2018
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
                     Zone1       code   0x000000    program   0x000004
                    .cinit    romdata   0x000004    program   0x000002
-                    Zone2       code   0x000008    program   0x000008
-                    Zone3       code   0x000020    program   0x00002c
-                    Zone4       code   0x000100    program   0x000040
+                    Zone2       code   0x000008    program   0x00000e
+                    Zone3       code   0x000020    program   0x00005c
+                    Zone4       code   0x000100    program   0x000076
 .config_300001_BUILD/DEFAULT/PRODUCTION/NEWPIC_    romdata   0x300001    program   0x000001
 .config_300002_BUILD/DEFAULT/PRODUCTION/NEWPIC_    romdata   0x300002    program   0x000001
 .config_300003_BUILD/DEFAULT/PRODUCTION/NEWPIC_    romdata   0x300003    program   0x000001
 .config_300005_BUILD/DEFAULT/PRODUCTION/NEWPIC_    romdata   0x300005    program   0x000001
 .config_300006_BUILD/DEFAULT/PRODUCTION/NEWPIC_    romdata   0x300006    program   0x000001
-              ZONE1_UDATA      udata   0x000060       data   0x000001
+              ZONE1_UDATA      udata   0x000060       data   0x000004
 
 
 
@@ -22,27 +22,36 @@ Linker Map File - Created Thu Nov 22 08:40:36 2018
                                Start         End      
                            ---------   ---------      
                             0x000000    0x000005      
-                            0x000008    0x00000f      
-                            0x000020    0x00004b      
-                            0x000100    0x00013f      
+                            0x000008    0x000015      
+                            0x000020    0x00007b      
+                            0x000100    0x000175      
                             0x300001    0x300003      
                             0x300005    0x300006      
-            127 out of 66584 program addresses used, program memory utilization is 0%
+            235 out of 66584 program addresses used, program memory utilization is 0%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-DeterminerCouleurAChanger   0x000112    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+        AccelerereLumiere   0x00011c    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+DeterminerCouleurAChanger   0x000146    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+             InitializeAD   0x00005e    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+             PotInterrupt   0x000100    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+          RalentirLumiere   0x000128    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+                       SD   0x000074    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
                     START   0x000020    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
-                   TO_ISR   0x000100    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
-             allumerJaune   0x000122    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
-             allumerRouge   0x00012c    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
-             allumerVerte   0x000136    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
-                     loop   0x000046    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
-                     saut   0x000140    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+               SetupDelay   0x000070    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+                   TO_ISR   0x000134    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+             allumerJaune   0x000156    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+             allumerRouge   0x000160    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+             allumerVerte   0x00016a    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+                     loop   0x000058    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+                     saut   0x000174    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
                     Count   0x000060       data     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+                     TEMP   0x000061       data     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+               TempsCourt   0x000062       data     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+                TempsLong   0x000063       data     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
 
 
 
@@ -50,13 +59,22 @@ DeterminerCouleurAChanger   0x000112    program     static C:\Users\labop2\Downl
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
                     START   0x000020    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
-                     loop   0x000046    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
-                   TO_ISR   0x000100    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
-DeterminerCouleurAChanger   0x000112    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
-             allumerJaune   0x000122    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
-             allumerRouge   0x00012c    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
-             allumerVerte   0x000136    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
-                     saut   0x000140    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+                     loop   0x000058    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+             InitializeAD   0x00005e    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+               SetupDelay   0x000070    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+                       SD   0x000074    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+             PotInterrupt   0x000100    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+        AccelerereLumiere   0x00011c    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+          RalentirLumiere   0x000128    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+                   TO_ISR   0x000134    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+DeterminerCouleurAChanger   0x000146    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+             allumerJaune   0x000156    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+             allumerRouge   0x000160    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+             allumerVerte   0x00016a    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+                     saut   0x000174    program     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
                     Count   0x000060       data     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+                     TEMP   0x000061       data     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+               TempsCourt   0x000062       data     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
+                TempsLong   0x000063       data     static C:\Users\labop2\Downloads\Travail-4\Travail4.X\newpic_8b_general.asm
 
 

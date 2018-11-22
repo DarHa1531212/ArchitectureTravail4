@@ -39,7 +39,10 @@
 ; TODO PLACE VARIABLE DEFINITIONS GO HERE
     
 ZONE1_UDATA	udata 0x60 			
-Count	 	res 1 
+    Count	res 1 
+    TEMP	res 1
+    TempsCourt	res 1
+    TempsLong	res 1
 
 ;*******************************************************************************
 ; Reset Vector
@@ -49,23 +52,35 @@ Zone1	code 00000h
 
 Zone2	code	00008h
 	btfss INTCON,TMR0IF
+	    goto TO_ISR
+	btfsc	PIR1,ADIF
+	    goto PotInterrupt
 	retfie
-	goto TO_ISR
-    
+	
 ;************************************************************
 ;program code starts here
 
 Zone3	code 00020h 
 
-    START
+				
+	START
+
+	call	InitializeAD 	
+	    call	SetupDelay
+	    bsf		ADCON0,GO    
+
 	    bcf TRISC,1		; définit les bits 1 à 3 du port C en sortie
 	    bcf TRISC,2		
 	    bcf TRISC,3
-	    
-	    bsf PORTC,1	
-    	    bcf PORTC,2	    
-    	    bcf PORTC,3
 
+	    bsf PORTC,1	
+	    bcf PORTC,2	    
+	    bcf PORTC,3
+
+	    movlw 0x3
+	    movwf TempsCourt
+	    movlw 0xa
+	    movwf TempsLong
 
 	    ;clrf TRISD		; définit tous les bits du port D en sorties
 	    bsf TRISB, 0	;Bit 0 du port B en entrée
@@ -101,60 +116,96 @@ Zone3	code 00020h
 
 	    bsf INTCON,GIE		; Met à 1 le bit appelé GIE (bit 7 de l'espace-mémoire associé à INTCON)
 				    ; => voir la page 105 de la documentation sur le micro-contrôleur http://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-				    ; Cette action autorise toutes les sources possibles d'interruptions qui ont été validées.
+					; Cette action autorise toutes les sources possibles d'interruptions qui ont été validées.
 	loop  
-	movff	PORTB,PORTD	
-	bra loop		; Saute à l'adresse "loop" (soit l'adresse de l'instruction "btg")
+	    movff	PORTB,PORTD	
+	    bra loop		
+	
+	InitializeAD
+	     movlw	B'00000100'	
+	     movwf	ADCON1		
+	     movlw	B'11000001'	
+	     movwf	ADCON0		
+	     bcf	PIR1,ADIF	
+	     bsf	PIE1,ADIE	
+	     bsf	INTCON,PEIE	
+	     bsf	INTCON,GIE	
+	     return
+	     
+	SetupDelay
+	    movlw	.30		
+	    movwf	TEMP		
+	SD
+	    decfsz	TEMP, F		
+	    goto	SD		
+	    return
 
    Zone4	code 0x100	
 	
-	TO_ISR				; Cette étiquette précède l'instruction "movlw". Elle sert d'adresse destination à l'instruction "goto" apparaissant plus haut.
-				; Les instructions qui suivent forment la sous-routine de gestion des interruptions.
-				
-				; Tout d'abord, on commence par réinitialiser la valeur initiale du temporisateur
-	movlw 0xA1		; Charge la valeur 0xff dans le registre WREG
-	movwf TMR0H		; Copie le contenu du registre WREG dans l'espace-mémoire associé à TMR0H
-	movlw 0x12		; Charge la valeur 0xf2 dans le registre WREG
-	movwf TMR0L		; Copie le contenu du registre WREG dans l'espace-mémoire associé à TMR0L
-				; (le temporisateur opérant sur 16 bits, la valeur de départ est dont 0xfff2)
+	PotInterrupt
+	    ;movf	ADRESH,W
+	    movlw b'11110000'
+	    CPFSGT ADRESH
+		call RalentirLumiere
+	    CPFSLT ADRESH 
+		call AccelerereLumiere
+	    ;si plus grand
+	    
+	    movwf	LATC
+	    bcf	PIR1,ADIF
+	    call	SetupDelay
+	    bsf	ADCON0,GO
+	    goto saut
+	AccelerereLumiere
+	    movlw 0x1
+	    movwf TempsCourt	
+	    movlw 0x3
+	    movwf TempsLong
+	    goto saut
+	RalentirLumiere
+	    movlw 0x3
+	    movwf TempsCourt	
+	    movlw 0xa
+	    movwf TempsLong
+	    goto saut
 	
-	bcf INTCON,TMR0IF	
-
-	decf Count		
-	bnz saut
-	
-	goto DeterminerCouleurAChanger
+	TO_ISR					
+	    movlw 0xA1		
+	    movwf TMR0H		
+	    movlw 0x12		
+	    movwf TMR0L		
+	    bcf INTCON,TMR0IF	
+	    decf Count		
+	    bnz saut
+	    goto DeterminerCouleurAChanger
 
 	DeterminerCouleurAChanger
-	BTFSC PORTC,1
-	goto allumerJaune
-	
-	BTFSC PORTC,2
-	goto allumerRouge
-	
-	goto allumerVerte
+	    BTFSC PORTC,1
+	    goto allumerJaune
+
+	    BTFSC PORTC,2
+	    goto allumerRouge
+
+	    goto allumerVerte
 
 	allumerJaune
 	    bsf PORTC, 2    
 	    BCF PORTC, 1	
-	    movlw 0x3		
-	    movwf Count
+	    movff TempsCourt, Count 		
 	    retfie
-	
+
 	allumerRouge
 	    bsf PORTC, 3    
 	    BCF PORTC, 2		
-	    movlw 0xa		
-	    movwf Count
+	    movff TempsLong, Count 		
 	    retfie
-	    
+
 	allumerVerte
 	    bsf PORTC, 1    
 	    BCF PORTC, 3	
-	    movlw 0xa		
-	    movwf Count
+	    movff TempsLong, Count 		
 	    retfie
 
-saut
+	saut
 	    retfie
     END

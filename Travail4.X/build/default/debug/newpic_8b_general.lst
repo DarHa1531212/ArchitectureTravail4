@@ -1,4 +1,4 @@
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE  1
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -55,170 +55,232 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00039 ; TODO PLACE VARIABLE DEFINITIONS GO HERE
                       00040     
                       00041 ZONE1_UDATA     udata 0x60                      
-000060                00042 Count           res 1 
-                      00043 
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE  2
+Warning[207]: Found label after column 1. (Count)
+000060                00042     Count       res 1 
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00044 ;*******************************************************************************
-                      00045 ; Reset Vector
-                      00046 ;*******************************************************************************
-                      00047 Zone1   code 00000h             
-000000 EF?? F???      00048     goto START
-                      00049 
-                      00050 Zone2   code    00008h
-000008 A4F2           00051         btfss INTCON,TMR0IF
-00000A 0010           00052         retfie
-00000C EF?? F???      00053         goto TO_ISR
-                      00054     
-                      00055 ;************************************************************
-                      00056 ;program code starts here
-                      00057 
-                      00058 Zone3   code 00020h 
-                      00059 
+Warning[207]: Found label after column 1. (TEMP)
+000061                00043     TEMP        res 1
+Warning[207]: Found label after column 1. (TempsCourt)
+000062                00044     TempsCourt  res 1
+Warning[207]: Found label after column 1. (TempsLong)
+000063                00045     TempsLong   res 1
+                      00046 
+                      00047 ;*******************************************************************************
+                      00048 ; Reset Vector
+                      00049 ;*******************************************************************************
+                      00050 Zone1   code 00000h             
+000000 EF?? F???      00051     goto START
+                      00052 
+                      00053 Zone2   code    00008h
+000008 B4F2           00054         btfsc INTCON,TMR0IF
+00000A EF?? F???      00055         goto TO_ISR
+00000E BC9E           00056         btfsc   PIR1,ADIF
+000010 EF?? F???      00057         goto PotInterrupt
+000014 0010           00058         retfie
+                      00059         
+                      00060 ;************************************************************
+                      00061 ;program code starts here
+                      00062 
+                      00063 Zone3   code 00020h 
+                      00064 
+                      00065                                 
 Warning[207]: Found label after column 1. (START)
-000020                00060     START
-000020 9294           00061             bcf TRISC,1         ; définit les bits 1 à 3 du port C en sortie
-000022 9494           00062             bcf TRISC,2         
-000024 9694           00063             bcf TRISC,3
-                      00064             
-000026 8282           00065             bsf PORTC,1 
-000028 9482           00066             bcf PORTC,2     
-00002A 9682           00067             bcf PORTC,3
-                      00068 
-                      00069 
-                      00070             ;clrf TRISD         ; définit tous les bits du port D en sorties
-00002C 8093           00071             bsf TRISB, 0        ;Bit 0 du port B en entrée
-                      00072 
-00002E 0E0A           00073             movlw 0xa           
-000030 6E??           00074             movwf Count         ;count = 0x3f
+000020                00066         START
+                      00067 
+000020 EC?? F???      00068         call    InitializeAD    
+000024 EC?? F???      00069             call        SetupDelay
+000028 82C2           00070             bsf         ADCON0,GO    
+                      00071 
+00002A 9294           00072             bcf TRISC,1         ; définit les bits 1 à 3 du port C en sortie
+00002C 9494           00073             bcf TRISC,2         
+00002E 9694           00074             bcf TRISC,3
                       00075 
-000032 0E07           00076             movlw 0x07          
-000034 6ED5           00077             movwf T0CON         ;   T0CON = 0x07
-                      00078                                 ; active le temporisateur 0 et opère ae 16 bits
-                      00079                                     ; Ces 8 bits (00000111) configure le micro-contrôleur de telle
-                      00080                                     ; sorte que le temporisateur 0 soit actif, qu'il opère avec 16 bits,
-                      00081                                     ; qu'il utilise un facteur d'échelle ainsi que l'horloge interne
-                      00082                                     ; => voir la page 149 de la documentation sur le micro-contrôleur ht
+000030 8282           00076             bsf PORTC,1 
+000032 9482           00077             bcf PORTC,2     
+000034 9682           00078             bcf PORTC,3
+                      00079 
+000036 0E03           00080             movlw 0x3
+000038 6E??           00081             movwf TempsCourt
+00003A 0E0A           00082             movlw 0xa
+00003C 6E??           00083             movwf TempsLong
+                      00084 
+                      00085             ;clrf TRISD         ; définit tous les bits du port D en sorties
+00003E 8093           00086             bsf TRISB, 0        ;Bit 0 du port B en entrée
+                      00087 
+000040 0E0A           00088             movlw 0xa           
+000042 6E??           00089             movwf Count         ;count = 0x3f
+                      00090 
+000044 0E07           00091             movlw 0x07          
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000046 6ED5           00092             movwf T0CON         ;   T0CON = 0x07
+                      00093                                 ; active le temporisateur 0 et opère ae 16 bits
+                      00094                                     ; Ces 8 bits (00000111) configure le micro-contrôleur de telle
+                      00095                                     ; sorte que le temporisateur 0 soit actif, qu'il opère avec 16 bits,
+                      00096                                     ; qu'il utilise un facteur d'échelle ainsi que l'horloge interne
+                      00097                                     ; => voir la page 149 de la documentation sur le micro-contrôleur ht
                             tp://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-                      00083 
-000036 0EA1           00084             movlw 0xa1          
-000038 6ED7           00085             movwf TMR0H         ; T0CON = 0xff
-00003A 0E12           00086             movlw 0x12          
-00003C 6ED6           00087             movwf TMR0L         ; TMR0L = 0xf2
-                      00088                                 ; (le temporisateur opérant sur 16 bits, la valeur de départ est dont 0x
+                      00098 
+000048 0EA1           00099             movlw 0xa1          
+00004A 6ED7           00100             movwf TMR0H         ; T0CON = 0xff
+00004C 0E12           00101             movlw 0x12          
+00004E 6ED6           00102             movwf TMR0L         ; TMR0L = 0xf2
+                      00103                                 ; (le temporisateur opérant sur 16 bits, la valeur de départ est dont 0x
                             fff2)
-                      00089 
-00003E 94F2           00090             bcf INTCON,TMR0IF   ; Met à zéro le bit appelé TMR0IF (bit 2 de l'espace-mémoire associé à I
+                      00104 
+000050 94F2           00105             bcf INTCON,TMR0IF   ; Met à zéro le bit appelé TMR0IF (bit 2 de l'espace-mémoire associé à I
                             NTCON)
-                      00091                                     ; => voir la page 105 de la documentation sur le micro-contrôleur ht
+                      00106                                     ; => voir la page 105 de la documentation sur le micro-contrôleur ht
                             tp://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE  3
-
-
-LOC  OBJECT CODE     LINE SOURCE TEXT
-  VALUE
-
-                      00092                                     ; Le drapeau ("flag") est donc réinitialisé à 0.
-                      00093 
-000040 8ED5           00094             bsf T0CON,TMR0ON    ; Met à 1 le bit appelé TMR0ON (bit 7 de l'espace-mémoire associé à T0CO
-                            N)
-                      00095                                     ; => voir la page 149 de la documentation sur le micro-contrôleur ht
-                            tp://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-                      00096                                     ; Le temporisateur 0 est donc démarré.
-                      00097 
-000042 8AF2           00098             bsf INTCON,TMR0IE   ; Met à 1 le bit appelé TMR0IE (bit 5 de l'espace-mémoire associé à INTC
-                            ON)
-                      00099                                     ; => voir la page 105 de la documentation sur le micro-contrôleur ht
-                            tp://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-                      00100                                     ; Cette action autorise le temporisateur à interrompre le micro-cont
-                            rôleur lorsque le temporisateur viendra à échéance (00000000).
-                      00101 
-000044 8EF2           00102             bsf INTCON,GIE              ; Met à 1 le bit appelé GIE (bit 7 de l'espace-mémoire associé à
-                             INTCON)
-                      00103                                     ; => voir la page 105 de la documentation sur le micro-contrôleur ht
-                            tp://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
-                      00104                                     ; Cette action autorise toutes les sources possibles d'interruptions
-                             qui ont été validées.
-Warning[207]: Found label after column 1. (loop)
-000046                00105         loop  
-000046 CF81 FF83      00106         movff   PORTB,PORTD     
-00004A D???           00107         bra loop                ; Saute à l'adresse "loop" (soit l'adresse de l'instruction "btg")
+                      00107                                     ; Le drapeau ("flag") est donc réinitialisé à 0.
                       00108 
-Warning[207]: Found label after column 1. (Zone4)
-                      00109    Zone4        code 0x100      
-                      00110         
-Warning[207]: Found label after column 1. (TO_ISR)
-000100                00111         TO_ISR                          ; Cette étiquette précède l'instruction "movlw". Elle sert d'adr
-                            esse destination à l'instruction "goto" apparaissant plus haut.
-                      00112                                 ; Les instructions qui suivent forment la sous-routine de gestion des in
-                            terruptions.
-                      00113                                 
-                      00114                                 ; Tout d'abord, on commence par réinitialiser la valeur initiale du temp
-                            orisateur
-000100 0EA1           00115         movlw 0xA1              ; Charge la valeur 0xff dans le registre WREG
-000102 6ED7           00116         movwf TMR0H             ; Copie le contenu du registre WREG dans l'espace-mémoire associé à TMR0
-                            H
-000104 0E12           00117         movlw 0x12              ; Charge la valeur 0xf2 dans le registre WREG
-000106 6ED6           00118         movwf TMR0L             ; Copie le contenu du registre WREG dans l'espace-mémoire associé à TMR0
-                            L
-                      00119                                 ; (le temporisateur opérant sur 16 bits, la valeur de départ est dont 0x
-                            fff2)
-                      00120         
-000108 94F2           00121         bcf INTCON,TMR0IF       
-                      00122 
-00010A 06??           00123         decf Count              
-00010C E1??           00124         bnz saut
-                      00125         
-00010E EF?? F???      00126         goto DeterminerCouleurAChanger
-                      00127 
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE  4
+000052 8ED5           00109             bsf T0CON,TMR0ON    ; Met à 1 le bit appelé TMR0ON (bit 7 de l'espace-mémoire associé à T0CO
+                            N)
+                      00110                                     ; => voir la page 149 de la documentation sur le micro-contrôleur ht
+                            tp://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
+                      00111                                     ; Le temporisateur 0 est donc démarré.
+                      00112 
+000054 8AF2           00113             bsf INTCON,TMR0IE   ; Met à 1 le bit appelé TMR0IE (bit 5 de l'espace-mémoire associé à INTC
+                            ON)
+                      00114                                     ; => voir la page 105 de la documentation sur le micro-contrôleur ht
+                            tp://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
+                      00115                                     ; Cette action autorise le temporisateur à interrompre le micro-cont
+                            rôleur lorsque le temporisateur viendra à échéance (00000000).
+                      00116 
+000056 8EF2           00117             bsf INTCON,GIE              ; Met à 1 le bit appelé GIE (bit 7 de l'espace-mémoire associé à
+                             INTCON)
+                      00118                                     ; => voir la page 105 de la documentation sur le micro-contrôleur ht
+                            tp://ww1.microchip.com/downloads/en/DeviceDoc/39625c.pdf
+                      00119                                         ; Cette action autorise toutes les sources possibles d'interrupt
+                            ions qui ont été validées.
+Warning[207]: Found label after column 1. (loop)
+000058                00120         loop  
+000058 CF81 FF83      00121             movff       PORTB,PORTD     
+00005C D???           00122             bra loop            
+                      00123         
+Warning[207]: Found label after column 1. (InitializeAD)
+00005E                00124         InitializeAD
+00005E 0E04           00125              movlw      B'00000100'     
+000060 6EC1           00126              movwf      ADCON1          
+000062 0EC1           00127              movlw      B'11000001'     
+000064 6EC2           00128              movwf      ADCON0          
+000066 9C9E           00129              bcf        PIR1,ADIF       
+000068 8C9D           00130              bsf        PIE1,ADIE       
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
+00006A 8CF2           00131              bsf        INTCON,PEIE     
+00006C 8EF2           00132              bsf        INTCON,GIE      
+00006E 0012           00133              return
+                      00134              
+Warning[207]: Found label after column 1. (SetupDelay)
+000070                00135         SetupDelay
+000070 0E1E           00136             movlw       .30             
+000072 6E??           00137             movwf       TEMP            
+Warning[207]: Found label after column 1. (SD)
+000074                00138         SD
+000074 2E??           00139             decfsz      TEMP, F         
+000076 EF?? F???      00140             goto        SD              
+00007A 0012           00141             return
+                      00142 
+Warning[207]: Found label after column 1. (Zone4)
+                      00143    Zone4        code 0x100      
+                      00144         
+Warning[207]: Found label after column 1. (PotInterrupt)
+000100                00145         PotInterrupt
+                      00146             ;movf       ADRESH,W
+000100 0EF0           00147             movlw b'11110000'
+000102 64C4           00148             CPFSGT ADRESH
+000104 EC?? F???      00149                 call RalentirLumiere
+000108 60C4           00150             CPFSLT ADRESH 
+00010A EC?? F???      00151                 call AccelerereLumiere
+                      00152             ;si plus grand
+                      00153             
+00010E 6E8B           00154             movwf       LATC
+000110 9C9E           00155             bcf PIR1,ADIF
+000112 EC?? F???      00156             call        SetupDelay
+000116 82C2           00157             bsf ADCON0,GO
+000118 EF?? F???      00158             goto saut
+Warning[207]: Found label after column 1. (AccelerereLumiere)
+00011C                00159         AccelerereLumiere
+00011C 0E01           00160             movlw 0x1
+00011E 6E??           00161             movwf TempsCourt    
+000120 0E03           00162             movlw 0x3
+000122 6E??           00163             movwf TempsLong
+000124 EF?? F???      00164             goto saut
+Warning[207]: Found label after column 1. (RalentirLumiere)
+000128                00165         RalentirLumiere
+000128 0E03           00166             movlw 0x3
+00012A 6E??           00167             movwf TempsCourt    
+00012C 0E0A           00168             movlw 0xa
+00012E 6E??           00169             movwf TempsLong
+000130 EF?? F???      00170             goto saut
+                      00171         
+Warning[207]: Found label after column 1. (TO_ISR)
+000134                00172         TO_ISR                                  
+000134 0EA1           00173             movlw 0xA1          
+000136 6ED7           00174             movwf TMR0H         
+000138 0E12           00175             movlw 0x12          
+00013A 6ED6           00176             movwf TMR0L         
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00013C 94F2           00177             bcf INTCON,TMR0IF   
+00013E 06??           00178             decf Count          
+000140 E1??           00179             bnz saut
+000142 EF?? F???      00180             goto DeterminerCouleurAChanger
+                      00181 
 Warning[207]: Found label after column 1. (DeterminerCouleurAChanger)
-000112                00128         DeterminerCouleurAChanger
-000112 B282           00129         BTFSC PORTC,1
-000114 EF?? F???      00130         goto allumerJaune
-                      00131         
-000118 B482           00132         BTFSC PORTC,2
-00011A EF?? F???      00133         goto allumerRouge
-                      00134         
-00011E EF?? F???      00135         goto allumerVerte
-                      00136 
+000146                00182         DeterminerCouleurAChanger
+000146 B282           00183             BTFSC PORTC,1
+000148 EF?? F???      00184             goto allumerJaune
+                      00185 
+00014C B482           00186             BTFSC PORTC,2
+00014E EF?? F???      00187             goto allumerRouge
+                      00188 
+000152 EF?? F???      00189             goto allumerVerte
+                      00190 
 Warning[207]: Found label after column 1. (allumerJaune)
-000122                00137         allumerJaune
-000122 8482           00138             bsf PORTC, 2    
-000124 9282           00139             BCF PORTC, 1        
-000126 0E03           00140             movlw 0x3           
-000128 6E??           00141             movwf Count
-00012A 0010           00142             retfie
-                      00143         
+000156                00191         allumerJaune
+000156 8482           00192             bsf PORTC, 2    
+000158 9282           00193             BCF PORTC, 1        
+00015A C??? F???      00194             movff TempsCourt, Count             
+00015E 0010           00195             retfie
+                      00196 
 Warning[207]: Found label after column 1. (allumerRouge)
-00012C                00144         allumerRouge
-00012C 8682           00145             bsf PORTC, 3    
-00012E 9482           00146             BCF PORTC, 2                
-000130 0E0A           00147             movlw 0xa           
-000132 6E??           00148             movwf Count
-000134 0010           00149             retfie
-                      00150             
+000160                00197         allumerRouge
+000160 8682           00198             bsf PORTC, 3    
+000162 9482           00199             BCF PORTC, 2                
+000164 C??? F???      00200             movff TempsLong, Count              
+000168 0010           00201             retfie
+                      00202 
 Warning[207]: Found label after column 1. (allumerVerte)
-000136                00151         allumerVerte
-000136 8282           00152             bsf PORTC, 1    
-000138 9682           00153             BCF PORTC, 3        
-00013A 0E0A           00154             movlw 0xa           
-00013C 6E??           00155             movwf Count
-00013E 0010           00156             retfie
-                      00157 
-000140                00158 saut
-000140 0010           00159             retfie
-                      00160     END
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE  5
+00016A                00203         allumerVerte
+00016A 8282           00204             bsf PORTC, 1    
+00016C 9682           00205             BCF PORTC, 3        
+00016E C??? F???      00206             movff TempsLong, Count              
+000172 0010           00207             retfie
+                      00208 
+Warning[207]: Found label after column 1. (saut)
+000174                00209         saut
+000174 0010           00210             retfie
+                      00211     END
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE  6
 
 
 SYMBOL TABLE
@@ -259,6 +321,7 @@ AN3                               00000003
 AN4                               00000005
 AN8                               00000001
 AN9                               00000004
+AccelerereLumiere                 0000011C
 B0CON                             00000E20
 B0D0                              00000E26
 B0D00                             00000000
@@ -276,13 +339,13 @@ B0D12                             00000002
 B0D13                             00000003
 B0D14                             00000004
 B0D15                             00000005
-B0D16                             00000006
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE  6
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE  7
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+B0D16                             00000006
 B0D17                             00000007
 B0D2                              00000E28
 B0D20                             00000000
@@ -335,13 +398,13 @@ B0D71                             00000001
 B0D72                             00000002
 B0D73                             00000003
 B0D74                             00000004
-B0D75                             00000005
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE  7
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE  8
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+B0D75                             00000005
 B0D76                             00000006
 B0D77                             00000007
 B0DLC                             00000E25
@@ -394,13 +457,13 @@ B1D41                             00000001
 B1D42                             00000002
 B1D43                             00000003
 B1D44                             00000004
-B1D45                             00000005
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE  8
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE  9
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+B1D45                             00000005
 B1D46                             00000006
 B1D47                             00000007
 B1D5                              00000E3B
@@ -453,13 +516,13 @@ B2D11                             00000001
 B2D12                             00000002
 B2D13                             00000003
 B2D14                             00000004
-B2D15                             00000005
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE  9
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 10
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+B2D15                             00000005
 B2D16                             00000006
 B2D17                             00000007
 B2D2                              00000E48
@@ -512,13 +575,13 @@ B2D70                             00000000
 B2D71                             00000001
 B2D72                             00000002
 B2D73                             00000003
-B2D74                             00000004
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 10
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 11
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+B2D74                             00000004
 B2D75                             00000005
 B2D76                             00000006
 B2D77                             00000007
@@ -571,13 +634,13 @@ B3D40                             00000000
 B3D41                             00000001
 B3D42                             00000002
 B3D43                             00000003
-B3D44                             00000004
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 11
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 12
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+B3D44                             00000004
 B3D45                             00000005
 B3D46                             00000006
 B3D47                             00000007
@@ -630,13 +693,13 @@ B4D1                              00000E67
 B4D10                             00000000
 B4D11                             00000001
 B4D12                             00000002
-B4D13                             00000003
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 12
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 13
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+B4D13                             00000003
 B4D14                             00000004
 B4D15                             00000005
 B4D16                             00000006
@@ -689,13 +752,13 @@ B4D67                             00000007
 B4D7                              00000E6D
 B4D70                             00000000
 B4D71                             00000001
-B4D72                             00000002
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 13
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 14
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+B4D72                             00000002
 B4D73                             00000003
 B4D74                             00000004
 B4D75                             00000005
@@ -748,13 +811,13 @@ B5D35                             00000005
 B5D36                             00000006
 B5D37                             00000007
 B5D4                              00000E7A
-B5D40                             00000000
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 14
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 15
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+B5D40                             00000000
 B5D41                             00000001
 B5D42                             00000002
 B5D43                             00000003
@@ -807,13 +870,13 @@ BGST                              00000005
 BIE0                              00000DFA
 BOR                               00000000
 BRG16                             00000003
-BRGCON1                           00000F70
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 15
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 16
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+BRGCON1                           00000F70
 BRGCON2                           00000F71
 BRGCON3                           00000F72
 BRGH                              00000002
@@ -866,13 +929,13 @@ CCP1IF                            00000002
 CCP1IP                            00000002
 CCP1M0                            00000000
 CCP1M1                            00000001
-CCP1M2                            00000002
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 16
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 17
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+CCP1M2                            00000002
 CCP1M3                            00000003
 CCPR1                             00000FBE
 CCPR1H                            00000FBF
@@ -925,13 +988,13 @@ DFLC0                             00000000
 DFLC1                             00000001
 DFLC2                             00000002
 DFLC3                             00000003
-DFLC4                             00000004
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 17
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 18
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+DFLC4                             00000004
 DLC0                              00000000
 DLC1                              00000001
 DLC2                              00000002
@@ -939,7 +1002,7 @@ DLC3                              00000003
 DONE                              00000001
 D_A                               00000005
 D_NOT_A                           00000005
-DeterminerCouleurAChanger         00000112
+DeterminerCouleurAChanger         00000146
 ECANCON                           00000F77
 ECCP1                             00000004
 ECCP1AS                           00000FB6
@@ -984,13 +1047,13 @@ EID10                             00000002
 EID11                             00000003
 EID12                             00000004
 EID13                             00000005
-EID14                             00000006
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 18
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 19
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+EID14                             00000006
 EID15                             00000007
 EID16                             00000000
 EID17                             00000001
@@ -1043,13 +1106,13 @@ F14BP_1                           00000001
 F14BP_2                           00000002
 F14BP_3                           00000003
 F15BP_0                           00000004
-F15BP_1                           00000005
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 19
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 20
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+F15BP_1                           00000005
 F15BP_2                           00000006
 F15BP_3                           00000007
 F1BP_0                            00000004
@@ -1102,13 +1165,13 @@ FIL10_0                           00000004
 FIL10_1                           00000005
 FIL11_0                           00000006
 FIL11_1                           00000007
-FIL12_0                           00000000
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 20
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 21
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+FIL12_0                           00000000
 FIL12_1                           00000001
 FIL13_0                           00000002
 FIL13_1                           00000003
@@ -1161,13 +1224,13 @@ FSR0L                             00000FE9
 FSR1                              00000001
 FSR1H                             00000FE2
 FSR1L                             00000FE1
-FSR2                              00000002
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 21
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 22
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+FSR2                              00000002
 FSR2H                             00000FDA
 FSR2L                             00000FD9
 GCEN                              00000007
@@ -1220,13 +1283,13 @@ INT2E                             00000004
 INT2F                             00000001
 INT2IE                            00000004
 INT2IF                            00000001
-INT2IP                            00000007
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 22
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 23
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+INT2IP                            00000007
 INT2P                             00000007
 INTCON                            00000FF2
 INTCON2                           00000FF1
@@ -1249,6 +1312,7 @@ IRXIE                             00000007
 IRXIF                             00000007
 IRXIP                             00000007
 IVRST                             00000005
+InitializeAD                      0000005E
 JTOFF                             00000001
 JTOFF_FILHIT1                     00000001
 KBI0                              00000004
@@ -1278,14 +1342,14 @@ LATC0                             00000000
 LATC1                             00000001
 LATC2                             00000002
 LATC3                             00000003
-LATC4                             00000004
-LATC5                             00000005
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 23
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 24
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+LATC4                             00000004
+LATC5                             00000005
 LATC6                             00000006
 LATC7                             00000007
 LATD                              00000F8C
@@ -1337,14 +1401,14 @@ NOT_T3SYNC                        00000002
 NOT_TO                            00000003
 NOT_W                             00000002
 NOT_WRITE                         00000002
-OBF                               00000006
-OERR                              00000001
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 24
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 25
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+OBF                               00000006
+OERR                              00000001
 OPMODE0                           00000005
 OPMODE1                           00000006
 OPMODE2                           00000007
@@ -1396,14 +1460,14 @@ PLUSW1                            00000FE3
 PLUSW2                            00000FDB
 POR                               00000001
 PORTA                             00000F80
-PORTB                             00000F81
-PORTC                             00000F82
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 25
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 26
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+PORTB                             00000F81
+PORTC                             00000F82
 PORTD                             00000F83
 PORTE                             00000F84
 POSTDEC0                          00000FED
@@ -1440,6 +1504,7 @@ PSSAC0                            00000002
 PSSAC1                            00000003
 PSSBD0                            00000000
 PSSBD1                            00000001
+PotInterrupt                      00000100
 R                                 00000002
 RA0                               00000000
 RA1                               00000001
@@ -1454,15 +1519,15 @@ RB0_B1DLC                         00000004
 RB0_B2DLC                         00000004
 RB0_B3DLC                         00000004
 RB0_B4DLC                         00000004
-RB0_B5DLC                         00000004
-RB0_DDRB                          00000000
-RB0_PORTB                         00000000
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 26
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 27
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RB0_B5DLC                         00000004
+RB0_DDRB                          00000000
+RB0_PORTB                         00000000
 RB0_RXB0DLC                       00000004
 RB0_RXB1DLC                       00000004
 RB0_TRISB                         00000000
@@ -1513,15 +1578,15 @@ RD4                               00000004
 RD5                               00000005
 RD6                               00000006
 RD7                               00000007
-RE0                               00000000
-RE1                               00000001
-RE2                               00000002
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 27
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 28
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
 RE3                               00000003
 READ_WRITE                        00000002
 REC0                              00000000
@@ -1572,15 +1637,15 @@ RXB0D24                           00000004
 RXB0D25                           00000005
 RXB0D26                           00000006
 RXB0D27                           00000007
-RXB0D3                            00000F69
-RXB0D30                           00000000
-RXB0D31                           00000001
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 28
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 29
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RXB0D3                            00000F69
+RXB0D30                           00000000
+RXB0D31                           00000001
 RXB0D32                           00000002
 RXB0D33                           00000003
 RXB0D34                           00000004
@@ -1631,15 +1696,15 @@ RXB0EIDL                          00000F64
 RXB0IE                            00000000
 RXB0IF                            00000000
 RXB0IP                            00000000
-RXB0OVFL                          00000007
-RXB0OVFL_NOT_FIFOEMPTY            00000007
-RXB0SIDH                          00000F61
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 29
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 30
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RXB0OVFL                          00000007
+RXB0OVFL_NOT_FIFOEMPTY            00000007
+RXB0SIDH                          00000F61
 RXB0SIDL                          00000F62
 RXB1CON                           00000F50
 RXB1D0                            00000F56
@@ -1690,15 +1755,15 @@ RXB1D47                           00000007
 RXB1D5                            00000F5B
 RXB1D50                           00000000
 RXB1D51                           00000001
-RXB1D52                           00000002
-RXB1D53                           00000003
-RXB1D54                           00000004
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 30
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 31
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RXB1D52                           00000002
+RXB1D53                           00000003
+RXB1D54                           00000004
 RXB1D55                           00000005
 RXB1D56                           00000006
 RXB1D57                           00000007
@@ -1749,15 +1814,15 @@ RXF10SIDL                         00000D75
 RXF11EIDH                         00000D7A
 RXF11EIDL                         00000D7B
 RXF11EN                           00000003
-RXF11SIDH                         00000D78
-RXF11SIDL                         00000D79
-RXF12EIDH                         00000D82
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 31
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 32
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RXF11SIDH                         00000D78
+RXF11SIDL                         00000D79
+RXF12EIDH                         00000D82
 RXF12EIDL                         00000D83
 RXF12EN                           00000004
 RXF12SIDH                         00000D80
@@ -1808,15 +1873,15 @@ RXF6EN                            00000006
 RXF6SIDH                          00000D60
 RXF6SIDL                          00000D61
 RXF7EIDH                          00000D66
-RXF7EIDL                          00000D67
-RXF7EN                            00000007
-RXF7SIDH                          00000D64
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 32
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 33
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RXF7EIDL                          00000D67
+RXF7EN                            00000007
+RXF7SIDH                          00000D64
 RXF7SIDL                          00000D65
 RXF8EIDH                          00000D6A
 RXF8EIDL                          00000D6B
@@ -1867,20 +1932,22 @@ RXRTR_TXRTR                       00000006
 RXWARN                            00000001
 R_NOT_W                           00000002
 R_W                               00000002
-S                                 00000003
-SAM                               00000006
-SBOREN                            00000006
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 33
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 34
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RalentirLumiere                   00000128
+S                                 00000003
+SAM                               00000006
+SBOREN                            00000006
 SCK                               00000003
 SCKP                              00000004
 SCL                               00000003
 SCS0                              00000000
 SCS1                              00000001
+SD                                00000074
 SDA                               00000004
 SDFLC                             00000DD8
 SDI                               00000004
@@ -1924,17 +1991,17 @@ SSPIE                             00000003
 SSPIF                             00000003
 SSPIP                             00000003
 SSPM0                             00000000
-SSPM1                             00000001
-SSPM2                             00000002
-SSPM3                             00000003
-SSPOV                             00000006
-SSPSTAT                           00000FC7
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 34
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 35
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000FC7
 START                             00000020
 STATUS                            00000FD8
 STKFUL                            00000007
@@ -1949,6 +2016,7 @@ STKUNF                            00000006
 SWDTE                             00000000
 SWDTEN                            00000000
 SYNC                              00000004
+SetupDelay                        00000070
 T08BIT                            00000006
 T0CKI                             00000004
 T0CON                             00000FD5
@@ -1982,18 +2050,18 @@ T3CCP1                            00000003
 T3CCP2                            00000006
 T3CKPS0                           00000004
 T3CKPS1                           00000005
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 36
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 T3CON                             00000FB1
 T3ECCP1                           00000006
 T3NSYNC                           00000002
 T3SYNC                            00000002
 TABLAT                            00000FF5
 TBLPTR                            00000FF6
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 35
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TBLPTRH                           00000FF7
 TBLPTRL                           00000FF6
 TBLPTRU                           00000FF8
@@ -2005,6 +2073,7 @@ TEC4                              00000004
 TEC5                              00000005
 TEC6                              00000006
 TEC7                              00000007
+TEMP                              00000061
 TMR0                              00000FD6
 TMR0H                             00000FD7
 TMR0IE                            00000005
@@ -2040,19 +2109,19 @@ TOSL                              00000FFD
 TOSU                              00000FFF
 TOUTPS0                           00000003
 TOUTPS1                           00000004
-TOUTPS2                           00000005
-TOUTPS3                           00000006
-TO_ISR                            00000100
-TRISA                             00000F92
-TRISA0                            00000000
-TRISA1                            00000001
-TRISA2                            00000002
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 36
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 37
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TO_ISR                            00000134
+TRISA                             00000F92
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
 TRISA3                            00000003
 TRISA4                            00000004
 TRISA5                            00000005
@@ -2099,6 +2168,12 @@ TX                                00000006
 TX9                               00000006
 TX9D                              00000000
 TXABT                             00000006
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 38
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TXB0CON                           00000F40
 TXB0D0                            00000F46
 TXB0D00                           00000000
@@ -2106,12 +2181,6 @@ TXB0D01                           00000001
 TXB0D02                           00000002
 TXB0D03                           00000003
 TXB0D04                           00000004
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 37
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TXB0D05                           00000005
 TXB0D06                           00000006
 TXB0D07                           00000007
@@ -2158,6 +2227,12 @@ TXB0D52                           00000002
 TXB0D53                           00000003
 TXB0D54                           00000004
 TXB0D55                           00000005
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 39
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TXB0D56                           00000006
 TXB0D57                           00000007
 TXB0D6                            00000F4C
@@ -2165,12 +2240,6 @@ TXB0D60                           00000000
 TXB0D61                           00000001
 TXB0D62                           00000002
 TXB0D63                           00000003
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 38
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TXB0D64                           00000004
 TXB0D65                           00000005
 TXB0D66                           00000006
@@ -2217,6 +2286,12 @@ TXB1D21                           00000001
 TXB1D22                           00000002
 TXB1D23                           00000003
 TXB1D24                           00000004
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 40
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TXB1D25                           00000005
 TXB1D26                           00000006
 TXB1D27                           00000007
@@ -2224,12 +2299,6 @@ TXB1D3                            00000F39
 TXB1D30                           00000000
 TXB1D31                           00000001
 TXB1D32                           00000002
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 39
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TXB1D33                           00000003
 TXB1D34                           00000004
 TXB1D35                           00000005
@@ -2276,6 +2345,12 @@ TXB1EIDH                          00000F33
 TXB1EIDL                          00000F34
 TXB1IE                            00000003
 TXB1IF                            00000003
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 41
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TXB1IP                            00000003
 TXB1SIDH                          00000F31
 TXB1SIDL                          00000F32
@@ -2283,12 +2358,6 @@ TXB2CON                           00000F20
 TXB2D0                            00000F26
 TXB2D00                           00000000
 TXB2D01                           00000001
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 40
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TXB2D02                           00000002
 TXB2D03                           00000003
 TXB2D04                           00000004
@@ -2335,6 +2404,12 @@ TXB2D5                            00000F2B
 TXB2D50                           00000000
 TXB2D51                           00000001
 TXB2D52                           00000002
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 42
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TXB2D53                           00000003
 TXB2D54                           00000004
 TXB2D55                           00000005
@@ -2342,12 +2417,6 @@ TXB2D56                           00000006
 TXB2D57                           00000007
 TXB2D6                            00000F2C
 TXB2D60                           00000000
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 41
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TXB2D61                           00000001
 TXB2D62                           00000002
 TXB2D63                           00000003
@@ -2394,19 +2463,21 @@ TXPRI0                            00000000
 TXPRI1                            00000001
 TXREG                             00000FAD
 TXREQ                             00000003
-TXRTR                             00000006
-TXSTA                             00000FAC
-TXWARN                            00000002
-UA                                00000001
-VCFG0                             00000004
-VCFG1                             00000005
-VDIRMAG                           00000007
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 42
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 43
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TXRTR                             00000006
+TXSTA                             00000FAC
+TXWARN                            00000002
+TempsCourt                        00000062
+TempsLong                         00000063
+UA                                00000001
+VCFG0                             00000004
+VCFG1                             00000005
+VDIRMAG                           00000007
 VREFM                             00000002
 VREFP                             00000003
 W                                 00000000
@@ -2451,6 +2522,12 @@ _CONFIG6H                         0030000B
 _CONFIG6L                         0030000A
 _CONFIG7H                         0030000D
 _CONFIG7L                         0030000C
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 44
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 _CP0_OFF_5L                       000000FF
 _CP0_ON_5L                        000000FE
 _CP1_OFF_5L                       000000FF
@@ -2460,12 +2537,6 @@ _CP2_ON_5L                        000000FB
 _CP3_OFF_5L                       000000FF
 _CP3_ON_5L                        000000F7
 _CPB_OFF_5H                       000000FF
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 43
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 _CPB_ON_5H                        000000BF
 _CPD_OFF_5H                       000000FF
 _CPD_ON_5H                        0000007F
@@ -2510,6 +2581,12 @@ _OSC_IRCIO7_1H                    000000F9
 _OSC_LP_1H                        000000F0
 _OSC_RCIO_1H                      000000F7
 _OSC_RC_1H                        000000F3
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 45
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 _OSC_XT_1H                        000000F1
 _PBADEN_OFF_3H                    000000FD
 _PBADEN_ON_3H                     000000FF
@@ -2519,12 +2596,6 @@ _STVREN_OFF_4L                    000000FE
 _STVREN_ON_4L                     000000FF
 _WDTPS_1024_2H                    000000F5
 _WDTPS_128_2H                     000000EF
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  8:44:58         PAGE 44
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 _WDTPS_16384_2H                   000000FD
 _WDTPS_16_2H                      000000E9
 _WDTPS_1_2H                       000000E1
@@ -2560,14 +2631,20 @@ _XINST_ON_4L                      000000FF
 __18F4680                         00000001
 __DEBUG                           
 __MPLAB_DEBUGGER_ICD3             1
-allumerJaune                      00000122
-allumerRouge                      0000012C
-allumerVerte                      00000136
-loop                              00000046
-saut                              00000140
+allumerJaune                      00000156
+allumerRouge                      00000160
+allumerVerte                      0000016A
+loop                              00000058
+saut                              00000174
+
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-22-2018  10:06:11         PAGE 46
+
+
+
+
 
 Errors   :     0
-Warnings :     8 reported,     0 suppressed
+Warnings :    19 reported,     0 suppressed
 Messages :     0 reported,     0 suppressed
 
 
