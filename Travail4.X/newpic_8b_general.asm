@@ -155,4 +155,6 @@ Zone3	code 00020h
 	    movwf Count
 	    retfie
 
+saut
+	    retfie
     END
