@@ -59,10 +59,15 @@ Zone2	code	00008h
 	
 ;************************************************************
 
-Zone3	code 00020h 
+Zone3	code 00090h 
 
 				
-	START
+START
+	    movlw 0x3
+	    movwf TempsCourt
+	    movlw 0x8
+	    movwf TempsLong    
+	
 	    movlw 0xa		
 	    movwf Count		;count = 0x3f
 	    movlw 0x07		
@@ -71,8 +76,7 @@ Zone3	code 00020h
 	    movwf TMR0H		; T0CON = 0xff
 	    movlw 0x12		
 	    movwf TMR0L		; TMR0L = 0xf2
-			
-	    
+				    
 	    bcf INTCON,TMR0IF
 	    bsf T0CON,TMR0ON
 	    bsf INTCON,TMR0IE
@@ -90,10 +94,7 @@ Zone3	code 00020h
 	    bcf PORTC,2	    
 	    bcf PORTC,3
 
-	    movlw 0x3
-	    movwf TempsCourt
-	    movlw 0x8
-	    movwf TempsLong
+
 
 	    bsf TRISB, 0	;Bit 0 du port B en entrée
 
@@ -115,19 +116,24 @@ Zone3	code 00020h
 	SetupDelay
 	    movlw	.30		
 	    movwf	TEMP				
+	SD
+	    decfsz TEMP,F
+	    goto SD
 	    return
 
-   Zone4	code 0x100	
+   Zone4	code 0x1000	
 	
-	PotInterrupt
+
+PotInterrupt
+
 	    bcf	PIR1,ADIF
-	    ;movf	ADRESH,W
+	    call SetupDelay
+	    bsf ADCON0,GO
 	    movlw b'11110000'
 	    CPFSGT ADRESH
 		call RalentirLumiere
 	    CPFSLT ADRESH 
 		call AccelerereLumiere
-	    ;si plus grand
 	    goto saut
 	AccelerereLumiere
 	    movlw d'1'
