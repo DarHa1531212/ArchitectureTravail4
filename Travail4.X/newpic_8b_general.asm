@@ -99,7 +99,7 @@ START
 	    bsf TRISB, 0	;Bit 0 du port B en entrée
 
 	    loop  
-	    movff	PORTB,PORTD	
+	    bsf		ADCON0,GO    
 	    bra loop		
 	
 	InitializeAD
@@ -114,7 +114,7 @@ START
 	     return
 	     
 	SetupDelay
-	    movlw	.30		
+	    movlw	.50		
 	    movwf	TEMP				
 	SD
 	    decfsz TEMP,F
@@ -128,8 +128,7 @@ PotInterrupt
 
 	    bcf	PIR1,ADIF
 	    call SetupDelay
-	    bsf ADCON0,GO
-	    movlw b'11110000'
+	    movlw b'00010000'
 	    CPFSGT ADRESH
 		call RalentirLumiere
 	    CPFSLT ADRESH 
