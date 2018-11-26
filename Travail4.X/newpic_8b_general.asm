@@ -84,7 +84,18 @@ START
 	    
 	    call	InitializeAD 	
 	    call	SetupDelay
-	    bsf		ADCON0,GO    
+	    bsf		ADCON0,GO
+
+		movlw	0xA2
+		movwf	SPBRG
+bsf	TXSTA,TXEN		
+bsf	TXSTA,BRGH
+bsf	RCSTA,SPEN
+bsf	RCSTA,CREN
+bcf	PIR1,RCIF
+bsf PIE1,RCIE
+bsf	INTCON,PEIE
+bsf	INTCON,GIE
 
 	    bcf TRISC,1		; définit les bits 1 à 3 du port C en sortie
 	    bcf TRISC,2		

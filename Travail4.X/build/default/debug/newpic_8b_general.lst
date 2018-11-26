@@ -1,4 +1,4 @@
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE  1
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -26,10 +26,10 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00001         LIST
                       00002 
                       00003 ;==========================================================================
-                      00004 ; Build date : Jul 23 2018
+                      00004 ; Build date : Nov 22 2017
                       00005 ;  MPASM PIC18F4680 processor include
                       00006 ; 
-                      00007 ;  (c) Copyright 1999-2018 Microchip Technology, All rights reserved
+                      00007 ;  (c) Copyright 1999-2017 Microchip Technology, All rights reserved
                       00008 ;==========================================================================
                       00009 
                       05077         LIST
@@ -57,7 +57,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00041 ZONE1_UDATA     udata 0x60                      
 Warning[207]: Found label after column 1. (Count)
 000060                00042     Count       res 1 
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE  2
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -116,7 +116,7 @@ Warning[207]: Found label after column 1. (TempsLong)
 0000BC 9494           00090             bcf TRISC,2         
 0000BE 9694           00091             bcf TRISC,3
                       00092 
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE  3
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -175,7 +175,7 @@ Warning[207]: Found label after column 1. (AccelerereLumiere)
 001018                00137         AccelerereLumiere
 001018 0E01           00138             movlw d'1'
 00101A 6E??           00139             movwf TempsCourt    
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE  4
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -234,7 +234,7 @@ Warning[207]: Found label after column 1. (allumerVerte)
 00106A C??? F???      00184             movff TempsLong, Count              
 00106E 0010           00185             retfie
                       00186 
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE  5
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -244,7 +244,7 @@ Warning[207]: Found label after column 1. (saut)
 001070                00187         saut
 001070 0010           00188             retfie
                       00189     END
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE  6
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE  6
 
 
 SYMBOL TABLE
@@ -303,7 +303,7 @@ B0D12                             00000002
 B0D13                             00000003
 B0D14                             00000004
 B0D15                             00000005
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE  7
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE  7
 
 
 SYMBOL TABLE
@@ -362,7 +362,7 @@ B0D71                             00000001
 B0D72                             00000002
 B0D73                             00000003
 B0D74                             00000004
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE  8
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE  8
 
 
 SYMBOL TABLE
@@ -421,7 +421,7 @@ B1D41                             00000001
 B1D42                             00000002
 B1D43                             00000003
 B1D44                             00000004
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE  9
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE  9
 
 
 SYMBOL TABLE
@@ -480,7 +480,7 @@ B2D11                             00000001
 B2D12                             00000002
 B2D13                             00000003
 B2D14                             00000004
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 10
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 10
 
 
 SYMBOL TABLE
@@ -539,7 +539,7 @@ B2D70                             00000000
 B2D71                             00000001
 B2D72                             00000002
 B2D73                             00000003
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 11
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 11
 
 
 SYMBOL TABLE
@@ -598,7 +598,7 @@ B3D40                             00000000
 B3D41                             00000001
 B3D42                             00000002
 B3D43                             00000003
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 12
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 12
 
 
 SYMBOL TABLE
@@ -657,7 +657,7 @@ B4D1                              00000E67
 B4D10                             00000000
 B4D11                             00000001
 B4D12                             00000002
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 13
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 13
 
 
 SYMBOL TABLE
@@ -716,7 +716,7 @@ B4D67                             00000007
 B4D7                              00000E6D
 B4D70                             00000000
 B4D71                             00000001
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 14
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 14
 
 
 SYMBOL TABLE
@@ -775,7 +775,7 @@ B5D35                             00000005
 B5D36                             00000006
 B5D37                             00000007
 B5D4                              00000E7A
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 15
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 15
 
 
 SYMBOL TABLE
@@ -834,7 +834,7 @@ BGST                              00000005
 BIE0                              00000DFA
 BOR                               00000000
 BRG16                             00000003
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 16
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 16
 
 
 SYMBOL TABLE
@@ -893,7 +893,7 @@ CCP1IF                            00000002
 CCP1IP                            00000002
 CCP1M0                            00000000
 CCP1M1                            00000001
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 17
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 17
 
 
 SYMBOL TABLE
@@ -952,7 +952,7 @@ DFLC0                             00000000
 DFLC1                             00000001
 DFLC2                             00000002
 DFLC3                             00000003
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 18
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 18
 
 
 SYMBOL TABLE
@@ -1011,7 +1011,7 @@ EID10                             00000002
 EID11                             00000003
 EID12                             00000004
 EID13                             00000005
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 19
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 19
 
 
 SYMBOL TABLE
@@ -1070,7 +1070,7 @@ F14BP_1                           00000001
 F14BP_2                           00000002
 F14BP_3                           00000003
 F15BP_0                           00000004
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 20
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 20
 
 
 SYMBOL TABLE
@@ -1129,7 +1129,7 @@ FIL10_0                           00000004
 FIL10_1                           00000005
 FIL11_0                           00000006
 FIL11_1                           00000007
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 21
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 21
 
 
 SYMBOL TABLE
@@ -1188,7 +1188,7 @@ FSR0L                             00000FE9
 FSR1                              00000001
 FSR1H                             00000FE2
 FSR1L                             00000FE1
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 22
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 22
 
 
 SYMBOL TABLE
@@ -1247,7 +1247,7 @@ INT2E                             00000004
 INT2F                             00000001
 INT2IE                            00000004
 INT2IF                            00000001
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 23
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 23
 
 
 SYMBOL TABLE
@@ -1306,7 +1306,7 @@ LATC0                             00000000
 LATC1                             00000001
 LATC2                             00000002
 LATC3                             00000003
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 24
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 24
 
 
 SYMBOL TABLE
@@ -1365,7 +1365,7 @@ NOT_T3SYNC                        00000002
 NOT_TO                            00000003
 NOT_W                             00000002
 NOT_WRITE                         00000002
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 25
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 25
 
 
 SYMBOL TABLE
@@ -1424,7 +1424,7 @@ PLUSW1                            00000FE3
 PLUSW2                            00000FDB
 POR                               00000001
 PORTA                             00000F80
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 26
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 26
 
 
 SYMBOL TABLE
@@ -1483,7 +1483,7 @@ RB0_B1DLC                         00000004
 RB0_B2DLC                         00000004
 RB0_B3DLC                         00000004
 RB0_B4DLC                         00000004
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 27
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 27
 
 
 SYMBOL TABLE
@@ -1542,7 +1542,7 @@ RD4                               00000004
 RD5                               00000005
 RD6                               00000006
 RD7                               00000007
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 28
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 28
 
 
 SYMBOL TABLE
@@ -1601,7 +1601,7 @@ RXB0D24                           00000004
 RXB0D25                           00000005
 RXB0D26                           00000006
 RXB0D27                           00000007
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 29
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 29
 
 
 SYMBOL TABLE
@@ -1660,7 +1660,7 @@ RXB0EIDL                          00000F64
 RXB0IE                            00000000
 RXB0IF                            00000000
 RXB0IP                            00000000
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 30
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 30
 
 
 SYMBOL TABLE
@@ -1719,7 +1719,7 @@ RXB1D47                           00000007
 RXB1D5                            00000F5B
 RXB1D50                           00000000
 RXB1D51                           00000001
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 31
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 31
 
 
 SYMBOL TABLE
@@ -1778,7 +1778,7 @@ RXF10SIDL                         00000D75
 RXF11EIDH                         00000D7A
 RXF11EIDL                         00000D7B
 RXF11EN                           00000003
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 32
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 32
 
 
 SYMBOL TABLE
@@ -1837,7 +1837,7 @@ RXF6EN                            00000006
 RXF6SIDH                          00000D60
 RXF6SIDL                          00000D61
 RXF7EIDH                          00000D66
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 33
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 33
 
 
 SYMBOL TABLE
@@ -1896,7 +1896,7 @@ RXRTR_TXRTR                       00000006
 RXWARN                            00000001
 R_NOT_W                           00000002
 R_W                               00000002
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 34
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 34
 
 
 SYMBOL TABLE
@@ -1955,7 +1955,7 @@ SSPIE                             00000003
 SSPIF                             00000003
 SSPIP                             00000003
 SSPM0                             00000000
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 35
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 35
 
 
 SYMBOL TABLE
@@ -2014,7 +2014,7 @@ T3CCP1                            00000003
 T3CCP2                            00000006
 T3CKPS0                           00000004
 T3CKPS1                           00000005
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 36
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 36
 
 
 SYMBOL TABLE
@@ -2073,7 +2073,7 @@ TOSL                              00000FFD
 TOSU                              00000FFF
 TOUTPS0                           00000003
 TOUTPS1                           00000004
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 37
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 37
 
 
 SYMBOL TABLE
@@ -2132,7 +2132,7 @@ TX                                00000006
 TX9                               00000006
 TX9D                              00000000
 TXABT                             00000006
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 38
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 38
 
 
 SYMBOL TABLE
@@ -2191,7 +2191,7 @@ TXB0D52                           00000002
 TXB0D53                           00000003
 TXB0D54                           00000004
 TXB0D55                           00000005
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 39
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 39
 
 
 SYMBOL TABLE
@@ -2250,7 +2250,7 @@ TXB1D21                           00000001
 TXB1D22                           00000002
 TXB1D23                           00000003
 TXB1D24                           00000004
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 40
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 40
 
 
 SYMBOL TABLE
@@ -2309,7 +2309,7 @@ TXB1EIDH                          00000F33
 TXB1EIDL                          00000F34
 TXB1IE                            00000003
 TXB1IF                            00000003
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 41
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 41
 
 
 SYMBOL TABLE
@@ -2368,7 +2368,7 @@ TXB2D5                            00000F2B
 TXB2D50                           00000000
 TXB2D51                           00000001
 TXB2D52                           00000002
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 42
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 42
 
 
 SYMBOL TABLE
@@ -2427,7 +2427,7 @@ TXPRI0                            00000000
 TXPRI1                            00000001
 TXREG                             00000FAD
 TXREQ                             00000003
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 43
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 43
 
 
 SYMBOL TABLE
@@ -2486,7 +2486,7 @@ _CONFIG6H                         0030000B
 _CONFIG6L                         0030000A
 _CONFIG7H                         0030000D
 _CONFIG7L                         0030000C
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 44
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 44
 
 
 SYMBOL TABLE
@@ -2545,7 +2545,7 @@ _OSC_IRCIO7_1H                    000000F9
 _OSC_LP_1H                        000000F0
 _OSC_RCIO_1H                      000000F7
 _OSC_RC_1H                        000000F3
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 45
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 45
 
 
 SYMBOL TABLE
@@ -2601,7 +2601,7 @@ allumerVerte                      00001066
 loop                              000000C8
 saut                              00001070
 
-MPASM 5.81             NEWPIC_8B_GENERAL.ASM   11-23-2018  8:52:18         PAGE 46
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   11-26-2018  10:26:59         PAGE 46
 
 
 
