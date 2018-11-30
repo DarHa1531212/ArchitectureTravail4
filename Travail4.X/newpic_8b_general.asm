@@ -38,11 +38,12 @@
 
 ; TODO PLACE VARIABLE DEFINITIONS GO HERE
     
-ZONE1_UDATA	udata 0x60 			
-    Count	res 1 
-    TEMP	res 1
-    TempsCourt	res 1
-    TempsLong	res 1
+ZONE1_UDATA	udata 0x60
+    EtatActuelFeux  res 1
+    Count	    res 1 
+    TEMP	    res 1
+    TempsCourt	    res 1
+    TempsLong	    res 1
 
 ;*******************************************************************************
 ; Reset Vector
@@ -55,6 +56,9 @@ Zone2	code	00008h
 	    goto TO_ISR
 	btfsc	PIR1,ADIF
 	    goto PotInterrupt
+	btfsc	PIR1,RCIF
+
+	goto LettresInterruption
 	retfie
 	
 ;************************************************************
@@ -66,7 +70,10 @@ START
 	    movlw 0x3
 	    movwf TempsCourt
 	    movlw 0x8
-	    movwf TempsLong    
+	    movwf TempsLong 
+	    
+	    movlw 0x6e
+	    movwf EtatActuelFeux
 	
 	    movlw 0xa		
 	    movwf Count		;count = 0x3f
@@ -86,16 +93,19 @@ START
 	    call	SetupDelay
 	    bsf		ADCON0,GO
 
-		movlw	0xA2
-		movwf	SPBRG
-bsf	TXSTA,TXEN		
-bsf	TXSTA,BRGH
-bsf	RCSTA,SPEN
-bsf	RCSTA,CREN
-bcf	PIR1,RCIF
-bsf PIE1,RCIE
-bsf	INTCON,PEIE
-bsf	INTCON,GIE
+	    clrf	LATB
+	    clrf	TRISB		
+	    bcf		TRISC,6
+	    movlw	0xA2
+	    movwf	SPBRG
+	    bsf	TXSTA,TXEN		
+	    bsf	TXSTA,BRGH
+	    bsf	RCSTA,SPEN
+	    bsf	RCSTA,CREN
+	    bcf	PIR1,RCIF
+	    bsf PIE1,RCIE
+	    bsf	INTCON,PEIE
+	    bsf	INTCON,GIE
 
 	    bcf TRISC,1		; définit les bits 1 à 3 du port C en sortie
 	    bcf TRISC,2		
@@ -134,7 +144,43 @@ bsf	INTCON,GIE
 
    Zone4	code 0x1000	
 	
+LettresInterruption
+	movlw	06h
+	andwf	RCSTA,W
+	btfsc	STATUS,Z
+	call SetEtatActuel
+	movwf	LATB		
+	movwf	TXREG					
+	goto	saut	
+	
+	SetEtatActuel
+	    movlw 0x6e;n
+	    CPFSEQ RCREG
+		goto TesterCEtA
+	    movff WREG,EtatActuelFeux ;n
+	    goto saut
+	
+	TesterCEtA
+	    movlw 0x63 ;c
+	    	CPFSEQ RCREG
+		goto TesterA
+		movff WREG,EtatActuelFeux ;c
+		goto saut
+		
+	TesterA
+	    movlw 0x61 ;a
+	    CPFSEQ RCREG
+		movff WREG,EtatActuelFeux ;a
+	    goto saut
 
+
+RcvError
+	bcf	RCSTA,CREN	
+	bsf	RCSTA,CREN	
+	movlw	0FFh
+	movwf	PORTB
+	goto saut
+	
 PotInterrupt
 
 	    bcf	PIR1,ADIF
@@ -167,8 +213,28 @@ PotInterrupt
 	    decf Count		
 	    bnz saut
 	    goto DeterminerCouleurAChanger
+    arret
+	BCF PORTC, 1
+        BCF PORTC, 2
+	BCF PORTC, 3
+	goto saut
+    ;arret here
 
+    TesterClignotant	    
+        movlw 0x63 ;c
+    	CPFSEQ EtatActuelFeux ;
+	goto arret
+	BCF PORTC, 1
+        BCF PORTC, 2
+	BTG PORTC, 3
+	goto saut
+	
+	    
 	DeterminerCouleurAChanger
+
+	    movlw 0x6e;n
+	    CPFSEQ EtatActuelFeux
+		goto TesterClignotant
 	    BTFSC PORTC,1
 	    goto allumerJaune
 
