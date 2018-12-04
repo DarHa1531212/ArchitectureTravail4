@@ -1,20 +1,20 @@
 MPLINK 5.08, LINKER
-Linker Map File - Created Fri Nov 30 08:38:30 2018
+Linker Map File - Created Tue Dec 04 11:19:35 2018
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
                     Zone1       code   0x000000    program   0x000004
                    .cinit    romdata   0x000004    program   0x000002
-                    Zone2       code   0x000008    program   0x00000e
-                    Zone3       code   0x000090    program   0x00006e
-                    Zone4       code   0x001000    program   0x000072
+                    Zone2       code   0x000008    program   0x000014
+                    Zone3       code   0x000090    program   0x000078
+                    Zone4       code   0x001000    program   0x0000fa
 .config_300001_BUILD/DEFAULT/PRODUCTION/NEWPIC_    romdata   0x300001    program   0x000001
 .config_300002_BUILD/DEFAULT/PRODUCTION/NEWPIC_    romdata   0x300002    program   0x000001
 .config_300003_BUILD/DEFAULT/PRODUCTION/NEWPIC_    romdata   0x300003    program   0x000001
 .config_300005_BUILD/DEFAULT/PRODUCTION/NEWPIC_    romdata   0x300005    program   0x000001
 .config_300006_BUILD/DEFAULT/PRODUCTION/NEWPIC_    romdata   0x300006    program   0x000001
-              ZONE1_UDATA      udata   0x000060       data   0x000004
+              ZONE1_UDATA      udata   0x000060       data   0x000005
 
 
 
@@ -22,59 +22,77 @@ Linker Map File - Created Fri Nov 30 08:38:30 2018
                                Start         End      
                            ---------   ---------      
                             0x000000    0x000005      
-                            0x000008    0x000015      
-                            0x000090    0x0000fd      
-                            0x001000    0x001071      
+                            0x000008    0x00001b      
+                            0x000090    0x000107      
+                            0x001000    0x0010f9      
                             0x300001    0x300003      
                             0x300005    0x300006      
-            249 out of 66584 program addresses used, program memory utilization is 0%
+            401 out of 66584 program addresses used, program memory utilization is 0%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-        AccelerereLumiere   0x001018    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-DeterminerCouleurAChanger   0x001042    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-             InitializeAD   0x0000e0    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-             PotInterrupt   0x001000    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-          RalentirLumiere   0x001024    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-                       SD   0x0000f6    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-                    START   0x000090    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-               SetupDelay   0x0000f2    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-                   TO_ISR   0x001030    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-             allumerJaune   0x001052    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-             allumerRouge   0x00105c    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-             allumerVerte   0x001066    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-                     loop   0x0000dc    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-                     saut   0x001070    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-                    Count   0x000060       data     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-                     TEMP   0x000061       data     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-               TempsCourt   0x000062       data     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-                TempsLong   0x000063       data     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+        AccelerereLumiere   0x001066    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                ArretFeux   0x0010b0    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+DeterminerCouleurAChanger   0x0010ba    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+             InitializeAD   0x0000ea    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+      LettresInterruption   0x001000    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+             PotInterrupt   0x00104e    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+          RalentirLumiere   0x001072    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                 RcvError   0x001042    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                       SD   0x000100    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                    START   0x000090    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+            SetEtatActuel   0x001012    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+               SetupDelay   0x0000fc    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                   TO_ISR   0x00107e    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                  TesterA   0x001036    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+               TesterCEtA   0x001026    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+         TesterClignotant   0x00109a    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+             allumerJaune   0x0010da    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+             allumerRouge   0x0010e4    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+             allumerVerte   0x0010ee    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                    arret   0x001090    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                     loop   0x0000e6    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                     saut   0x0010f8    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                    Count   0x000061       data     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+           EtatActuelFeux   0x000060       data     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                     TEMP   0x000062       data     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+               TempsCourt   0x000063       data     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                TempsLong   0x000064       data     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
 
 
 
                               Symbols - Sorted by Address
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-                    START   0x000090    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-                     loop   0x0000dc    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-             InitializeAD   0x0000e0    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-               SetupDelay   0x0000f2    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-                       SD   0x0000f6    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-             PotInterrupt   0x001000    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-        AccelerereLumiere   0x001018    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-          RalentirLumiere   0x001024    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-                   TO_ISR   0x001030    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-DeterminerCouleurAChanger   0x001042    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-             allumerJaune   0x001052    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-             allumerRouge   0x00105c    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-             allumerVerte   0x001066    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-                     saut   0x001070    program     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-                    Count   0x000060       data     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-                     TEMP   0x000061       data     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-               TempsCourt   0x000062       data     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
-                TempsLong   0x000063       data     static C:\Users\labop2\Documents\lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                    START   0x000090    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                     loop   0x0000e6    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+             InitializeAD   0x0000ea    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+               SetupDelay   0x0000fc    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                       SD   0x000100    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+      LettresInterruption   0x001000    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+            SetEtatActuel   0x001012    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+               TesterCEtA   0x001026    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                  TesterA   0x001036    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                 RcvError   0x001042    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+             PotInterrupt   0x00104e    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+        AccelerereLumiere   0x001066    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+          RalentirLumiere   0x001072    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                   TO_ISR   0x00107e    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                    arret   0x001090    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+         TesterClignotant   0x00109a    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                ArretFeux   0x0010b0    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+DeterminerCouleurAChanger   0x0010ba    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+             allumerJaune   0x0010da    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+             allumerRouge   0x0010e4    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+             allumerVerte   0x0010ee    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                     saut   0x0010f8    program     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+           EtatActuelFeux   0x000060       data     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                    Count   0x000061       data     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                     TEMP   0x000062       data     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+               TempsCourt   0x000063       data     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
+                TempsLong   0x000064       data     static C:\Users\labop2\Documents\Lab4\ArchitectureTravail4\Travail4.X\newpic_8b_general.asm
 
 

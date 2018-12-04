@@ -119,7 +119,7 @@ START
 
 	    bsf TRISB, 0	;Bit 0 du port B en entrée
 
-	    loop  
+	loop  
 	    bsf		ADCON0,GO    
 	    bra loop		
 	
@@ -158,6 +158,7 @@ LettresInterruption
 	    CPFSEQ RCREG
 		goto TesterCEtA
 	    movff WREG,EtatActuelFeux ;n
+	    goto START
 	    goto saut
 	
 	TesterCEtA
@@ -221,27 +222,39 @@ PotInterrupt
     ;arret here
 
     TesterClignotant	    
-        movlw 0x63 ;c
-    	CPFSEQ EtatActuelFeux ;
-	goto arret
+    	    movlw 0x63;c
+	    CPFSEQ EtatActuelFeux
+	    goto ArretFeux   
+	    goto ActiverClignotant
+
+
+    ActiverClignotant
+	movlw 0x1
+	movwf Count
 	BCF PORTC, 1
         BCF PORTC, 2
 	BTG PORTC, 3
 	goto saut
 	
-	    
-	DeterminerCouleurAChanger
+    ArretFeux
+        BCF PORTC, 1
+        BCF PORTC, 2
+	BCF PORTC, 3
+	movlw 0x1
+	movwf Count
+	goto saut
+    DeterminerCouleurAChanger
+	movlw 0x6e;n
+	CPFSEQ EtatActuelFeux
+	    goto TesterClignotant
 
-	    movlw 0x6e;n
-	    CPFSEQ EtatActuelFeux
-		goto TesterClignotant
-	    BTFSC PORTC,1
-	    goto allumerJaune
+	BTFSC PORTC,1
+	goto allumerJaune
 
-	    BTFSC PORTC,2
-	    goto allumerRouge
+	BTFSC PORTC,2
+	goto allumerRouge
 
-	    goto allumerVerte
+	goto allumerVerte
 
 	allumerJaune
 	    bsf PORTC, 2    
