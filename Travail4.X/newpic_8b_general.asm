@@ -171,6 +171,7 @@ LettresInterruption
 	TesterA
 	    movlw 0x61 ;a
 	    CPFSEQ RCREG
+	    goto saut
 		movff WREG,EtatActuelFeux ;a
 	    goto saut
 

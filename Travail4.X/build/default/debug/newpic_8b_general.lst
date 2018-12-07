@@ -1,4 +1,4 @@
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE  1
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -57,7 +57,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00041 ZONE1_UDATA     udata 0x60
 Warning[207]: Found label after column 1. (EtatActuelFeux)
 000060                00042     EtatActuelFeux  res 1
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE  2
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -116,7 +116,7 @@ Warning[207]: Found label after column 1. (TempsLong)
 0000B0 8AF2           00089             bsf INTCON,TMR0IE
 0000B2 8EF2           00090             bsf INTCON,GIE
                       00091             
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE  3
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -175,7 +175,7 @@ Warning[207]: Found label after column 1. (SetupDelay)
 0000FE 6E??           00139             movwf       TEMP                            
 Warning[207]: Found label after column 1. (SD)
 000100                00140         SD
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE  4
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -218,137 +218,138 @@ Warning[207]: Found label after column 1. (TesterA)
 001036                00171         TesterA
 001036 0E61           00172             movlw 0x61 ;a
 001038 62AE           00173             CPFSEQ RCREG
-00103A CFE8 F???      00174                 movff WREG,EtatActuelFeux ;a
-00103E EF?? F???      00175             goto saut
-                      00176 
+00103A EF?? F???      00174             goto saut
+00103E CFE8 F???      00175                 movff WREG,EtatActuelFeux ;a
+001042 EF?? F???      00176             goto saut
                       00177 
-001042                00178 RcvError
-001042 98AB           00179         bcf     RCSTA,CREN      
-001044 88AB           00180         bsf     RCSTA,CREN      
-001046 0EFF           00181         movlw   0FFh
-001048 6E81           00182         movwf   PORTB
-00104A EF?? F???      00183         goto saut
-                      00184         
-00104E                00185 PotInterrupt
-                      00186 
-00104E 9C9E           00187             bcf PIR1,ADIF
-001050 EC?? F???      00188             call SetupDelay
-001054 0E10           00189             movlw b'00010000'
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE  5
+                      00178 
+001046                00179 RcvError
+001046 98AB           00180         bcf     RCSTA,CREN      
+001048 88AB           00181         bsf     RCSTA,CREN      
+00104A 0EFF           00182         movlw   0FFh
+00104C 6E81           00183         movwf   PORTB
+00104E EF?? F???      00184         goto saut
+                      00185         
+001052                00186 PotInterrupt
+                      00187 
+001052 9C9E           00188             bcf PIR1,ADIF
+001054 EC?? F???      00189             call SetupDelay
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-001056 64C4           00190             CPFSGT ADRESH
-001058 EC?? F???      00191                 call RalentirLumiere
-00105C 60C4           00192             CPFSLT ADRESH 
-00105E EC?? F???      00193                 call AccelerereLumiere
-001062 EF?? F???      00194             goto saut
+001058 0E10           00190             movlw b'00010000'
+00105A 64C4           00191             CPFSGT ADRESH
+00105C EC?? F???      00192                 call RalentirLumiere
+001060 60C4           00193             CPFSLT ADRESH 
+001062 EC?? F???      00194                 call AccelerereLumiere
+001066 EF?? F???      00195             goto saut
 Warning[207]: Found label after column 1. (AccelerereLumiere)
-001066                00195         AccelerereLumiere
-001066 0E01           00196             movlw d'1'
-001068 6E??           00197             movwf TempsCourt    
-00106A 0E03           00198             movlw d'3'
-00106C 6E??           00199             movwf TempsLong
-00106E EF?? F???      00200             goto saut
+00106A                00196         AccelerereLumiere
+00106A 0E01           00197             movlw d'1'
+00106C 6E??           00198             movwf TempsCourt    
+00106E 0E03           00199             movlw d'3'
+001070 6E??           00200             movwf TempsLong
+001072 EF?? F???      00201             goto saut
 Warning[207]: Found label after column 1. (RalentirLumiere)
-001072                00201         RalentirLumiere
-001072 0E03           00202             movlw 0x3
-001074 6E??           00203             movwf TempsCourt    
-001076 0E0A           00204             movlw 0xa
-001078 6E??           00205             movwf TempsLong
-00107A EF?? F???      00206             goto saut
-                      00207         
+001076                00202         RalentirLumiere
+001076 0E03           00203             movlw 0x3
+001078 6E??           00204             movwf TempsCourt    
+00107A 0E0A           00205             movlw 0xa
+00107C 6E??           00206             movwf TempsLong
+00107E EF?? F???      00207             goto saut
+                      00208         
 Warning[207]: Found label after column 1. (TO_ISR)
-00107E                00208         TO_ISR                                  
-00107E 94F2           00209             bcf INTCON,TMR0IF   
-001080 0EA1           00210             movlw 0xA1          
-001082 6ED7           00211             movwf TMR0H         
-001084 0E12           00212             movlw 0x12          
-001086 6ED6           00213             movwf TMR0L         
-001088 06??           00214             decf Count          
-00108A E1??           00215             bnz saut
-00108C EF?? F???      00216             goto DeterminerCouleurAChanger
+001082                00209         TO_ISR                                  
+001082 94F2           00210             bcf INTCON,TMR0IF   
+001084 0EA1           00211             movlw 0xA1          
+001086 6ED7           00212             movwf TMR0H         
+001088 0E12           00213             movlw 0x12          
+00108A 6ED6           00214             movwf TMR0L         
+00108C 06??           00215             decf Count          
+00108E E1??           00216             bnz saut
+001090 EF?? F???      00217             goto DeterminerCouleurAChanger
 Warning[207]: Found label after column 1. (arret)
-001090                00217     arret
-001090 9282           00218         BCF PORTC, 1
-001092 9482           00219         BCF PORTC, 2
-001094 9682           00220         BCF PORTC, 3
-001096 EF?? F???      00221         goto saut
-                      00222     ;arret here
-                      00223 
+001094                00218     arret
+001094 9282           00219         BCF PORTC, 1
+001096 9482           00220         BCF PORTC, 2
+001098 9682           00221         BCF PORTC, 3
+00109A EF?? F???      00222         goto saut
+                      00223     ;arret here
+                      00224 
 Warning[207]: Found label after column 1. (TesterClignotant)
-00109A                00224     TesterClignotant        
-00109A 0E63           00225             movlw 0x63;c
-00109C 62??           00226             CPFSEQ EtatActuelFeux
-00109E EF?? F???      00227             goto ArretFeux   
-0010A2 EF?? F???      00228             goto ActiverClignotant
-                      00229 
+00109E                00225     TesterClignotant        
+00109E 0E63           00226             movlw 0x63;c
+0010A0 62??           00227             CPFSEQ EtatActuelFeux
+0010A2 EF?? F???      00228             goto ArretFeux   
+0010A6 EF?? F???      00229             goto ActiverClignotant
                       00230 
+                      00231 
 Warning[207]: Found label after column 1. (ActiverClignotant)
-0010A6                00231     ActiverClignotant
-0010A6 0E01           00232         movlw 0x1
-0010A8 6E??           00233         movwf Count
-0010AA 9282           00234         BCF PORTC, 1
-0010AC 9482           00235         BCF PORTC, 2
-0010AE 7682           00236         BTG PORTC, 3
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE  6
+0010AA                00232     ActiverClignotant
+0010AA 0E01           00233         movlw 0x1
+0010AC 6E??           00234         movwf Count
+0010AE 9282           00235         BCF PORTC, 1
+0010B0 9482           00236         BCF PORTC, 2
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE  6
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0010B0 EF?? F???      00237         goto saut
-                      00238         
+0010B2 7682           00237         BTG PORTC, 3
+0010B4 EF?? F???      00238         goto saut
+                      00239         
 Warning[207]: Found label after column 1. (ArretFeux)
-0010B4                00239     ArretFeux
-0010B4 9282           00240         BCF PORTC, 1
-0010B6 9482           00241         BCF PORTC, 2
-0010B8 9682           00242         BCF PORTC, 3
-0010BA 0E01           00243         movlw 0x1
-0010BC 6E??           00244         movwf Count
-0010BE EF?? F???      00245         goto saut
+0010B8                00240     ArretFeux
+0010B8 9282           00241         BCF PORTC, 1
+0010BA 9482           00242         BCF PORTC, 2
+0010BC 9682           00243         BCF PORTC, 3
+0010BE 0E01           00244         movlw 0x1
+0010C0 6E??           00245         movwf Count
+0010C2 EF?? F???      00246         goto saut
 Warning[207]: Found label after column 1. (DeterminerCouleurAChanger)
-0010C2                00246     DeterminerCouleurAChanger
-0010C2 0E6E           00247         movlw 0x6e;n
-0010C4 62??           00248         CPFSEQ EtatActuelFeux
-0010C6 EF?? F???      00249             goto TesterClignotant
-                      00250 
-0010CA B282           00251         BTFSC PORTC,1
-0010CC EF?? F???      00252         goto allumerJaune
-                      00253 
-0010D0 B482           00254         BTFSC PORTC,2
-0010D2 EF?? F???      00255         goto allumerRouge
-                      00256 
-0010D6 EF?? F???      00257         goto allumerVerte
-                      00258 
+0010C6                00247     DeterminerCouleurAChanger
+0010C6 0E6E           00248         movlw 0x6e;n
+0010C8 62??           00249         CPFSEQ EtatActuelFeux
+0010CA EF?? F???      00250             goto TesterClignotant
+                      00251 
+0010CE B282           00252         BTFSC PORTC,1
+0010D0 EF?? F???      00253         goto allumerJaune
+                      00254 
+0010D4 B482           00255         BTFSC PORTC,2
+0010D6 EF?? F???      00256         goto allumerRouge
+                      00257 
+0010DA EF?? F???      00258         goto allumerVerte
+                      00259 
 Warning[207]: Found label after column 1. (allumerJaune)
-0010DA                00259         allumerJaune
-0010DA 8482           00260             bsf PORTC, 2    
-0010DC 9282           00261             BCF PORTC, 1        
-0010DE C??? F???      00262             movff TempsCourt, Count             
-0010E2 0010           00263             retfie
-                      00264 
+0010DE                00260         allumerJaune
+0010DE 8482           00261             bsf PORTC, 2    
+0010E0 9282           00262             BCF PORTC, 1        
+0010E2 C??? F???      00263             movff TempsCourt, Count             
+0010E6 0010           00264             retfie
+                      00265 
 Warning[207]: Found label after column 1. (allumerRouge)
-0010E4                00265         allumerRouge
-0010E4 8682           00266             bsf PORTC, 3    
-0010E6 9482           00267             BCF PORTC, 2                
-0010E8 C??? F???      00268             movff TempsLong, Count              
-0010EC 0010           00269             retfie
-                      00270 
+0010E8                00266         allumerRouge
+0010E8 8682           00267             bsf PORTC, 3    
+0010EA 9482           00268             BCF PORTC, 2                
+0010EC C??? F???      00269             movff TempsLong, Count              
+0010F0 0010           00270             retfie
+                      00271 
 Warning[207]: Found label after column 1. (allumerVerte)
-0010EE                00271         allumerVerte
-0010EE 8282           00272             bsf PORTC, 1    
-0010F0 9682           00273             BCF PORTC, 3        
-0010F2 C??? F???      00274             movff TempsLong, Count              
-0010F6 0010           00275             retfie
-                      00276 
+0010F2                00272         allumerVerte
+0010F2 8282           00273             bsf PORTC, 1    
+0010F4 9682           00274             BCF PORTC, 3        
+0010F6 C??? F???      00275             movff TempsLong, Count              
+0010FA 0010           00276             retfie
+                      00277 
 Warning[207]: Found label after column 1. (saut)
-0010F8                00277         saut
-0010F8 0010           00278             retfie
-                      00279     END
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE  7
+0010FC                00278         saut
+0010FC 0010           00279             retfie
+                      00280     END
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE  7
 
 
 SYMBOL TABLE
@@ -389,9 +390,9 @@ AN3                               00000003
 AN4                               00000005
 AN8                               00000001
 AN9                               00000004
-AccelerereLumiere                 00001066
-ActiverClignotant                 000010A6
-ArretFeux                         000010B4
+AccelerereLumiere                 0000106A
+ActiverClignotant                 000010AA
+ArretFeux                         000010B8
 B0CON                             00000E20
 B0D0                              00000E26
 B0D00                             00000000
@@ -407,7 +408,7 @@ B0D10                             00000000
 B0D11                             00000001
 B0D12                             00000002
 B0D13                             00000003
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE  8
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE  8
 
 
 SYMBOL TABLE
@@ -466,7 +467,7 @@ B0D7                              00000E2D
 B0D70                             00000000
 B0D71                             00000001
 B0D72                             00000002
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE  9
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE  9
 
 
 SYMBOL TABLE
@@ -525,7 +526,7 @@ B1D4                              00000E3A
 B1D40                             00000000
 B1D41                             00000001
 B1D42                             00000002
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 10
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 10
 
 
 SYMBOL TABLE
@@ -584,7 +585,7 @@ B2D1                              00000E47
 B2D10                             00000000
 B2D11                             00000001
 B2D12                             00000002
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 11
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 11
 
 
 SYMBOL TABLE
@@ -643,7 +644,7 @@ B2D67                             00000007
 B2D7                              00000E4D
 B2D70                             00000000
 B2D71                             00000001
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 12
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 12
 
 
 SYMBOL TABLE
@@ -702,7 +703,7 @@ B3D37                             00000007
 B3D4                              00000E5A
 B3D40                             00000000
 B3D41                             00000001
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 13
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 13
 
 
 SYMBOL TABLE
@@ -761,7 +762,7 @@ B4D06                             00000006
 B4D07                             00000007
 B4D1                              00000E67
 B4D10                             00000000
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 14
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 14
 
 
 SYMBOL TABLE
@@ -820,7 +821,7 @@ B4D65                             00000005
 B4D66                             00000006
 B4D67                             00000007
 B4D7                              00000E6D
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 15
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 15
 
 
 SYMBOL TABLE
@@ -879,7 +880,7 @@ B5D33                             00000003
 B5D34                             00000004
 B5D35                             00000005
 B5D36                             00000006
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 16
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 16
 
 
 SYMBOL TABLE
@@ -938,7 +939,7 @@ BCLIP                             00000003
 BF                                00000000
 BGST                              00000005
 BIE0                              00000DFA
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 17
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 17
 
 
 SYMBOL TABLE
@@ -997,7 +998,7 @@ CCP1CON                           00000FBD
 CCP1IE                            00000002
 CCP1IF                            00000002
 CCP1IP                            00000002
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 18
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 18
 
 
 SYMBOL TABLE
@@ -1056,7 +1057,7 @@ DDRD                              TRISD
 DDRE                              TRISE
 DFLC0                             00000000
 DFLC1                             00000001
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 19
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 19
 
 
 SYMBOL TABLE
@@ -1072,7 +1073,7 @@ DLC3                              00000003
 DONE                              00000001
 D_A                               00000005
 D_NOT_A                           00000005
-DeterminerCouleurAChanger         000010C2
+DeterminerCouleurAChanger         000010C6
 ECANCON                           00000F77
 ECCP1                             00000004
 ECCP1AS                           00000FB6
@@ -1115,7 +1116,7 @@ EID0                              00000000
 EID1                              00000001
 EID10                             00000002
 EID11                             00000003
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 20
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 20
 
 
 SYMBOL TABLE
@@ -1174,7 +1175,7 @@ F13BP_2                           00000006
 F13BP_3                           00000007
 F14BP_0                           00000000
 F14BP_1                           00000001
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 21
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 21
 
 
 SYMBOL TABLE
@@ -1233,7 +1234,7 @@ FIFOWMIP                          00000000
 FIL0_0                            00000000
 FIL0_1                            00000001
 FIL10_0                           00000004
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 22
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 22
 
 
 SYMBOL TABLE
@@ -1292,7 +1293,7 @@ FREE                              00000004
 FSR0                              00000000
 FSR0H                             00000FEA
 FSR0L                             00000FE9
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 23
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 23
 
 
 SYMBOL TABLE
@@ -1351,7 +1352,7 @@ INT1IP                            00000006
 INT1P                             00000006
 INT2                              00000002
 INT2E                             00000004
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 24
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 24
 
 
 SYMBOL TABLE
@@ -1410,7 +1411,7 @@ LATB6                             00000006
 LATB7                             00000007
 LATC                              00000F8B
 LATC0                             00000000
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 25
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 25
 
 
 SYMBOL TABLE
@@ -1469,7 +1470,7 @@ NOT_RBPU                          00000007
 NOT_RI                            00000004
 NOT_SS                            00000005
 NOT_T1SYNC                        00000002
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 26
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 26
 
 
 SYMBOL TABLE
@@ -1528,7 +1529,7 @@ PIR2                              00000FA1
 PIR3                              00000FA4
 PLLEN                             00000006
 PLUSW0                            00000FEB
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 27
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 27
 
 
 SYMBOL TABLE
@@ -1576,7 +1577,7 @@ PSSAC0                            00000002
 PSSAC1                            00000003
 PSSBD0                            00000000
 PSSBD1                            00000001
-PotInterrupt                      0000104E
+PotInterrupt                      00001052
 R                                 00000002
 RA0                               00000000
 RA1                               00000001
@@ -1587,7 +1588,7 @@ RA5                               00000005
 RA6                               00000006
 RA7                               00000007
 RB0_B0DLC                         00000004
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 28
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 28
 
 
 SYMBOL TABLE
@@ -1646,7 +1647,7 @@ RD1                               00000001
 RD16                              00000007
 RD2                               00000002
 RD3                               00000003
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 29
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 29
 
 
 SYMBOL TABLE
@@ -1705,7 +1706,7 @@ RXB0D20                           00000000
 RXB0D21                           00000001
 RXB0D22                           00000002
 RXB0D23                           00000003
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 30
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 30
 
 
 SYMBOL TABLE
@@ -1764,7 +1765,7 @@ RXB0DBEN                          00000002
 RXB0DBEN_FILHIT2                  00000002
 RXB0DLC                           00000F65
 RXB0EIDH                          00000F63
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 31
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 31
 
 
 SYMBOL TABLE
@@ -1823,7 +1824,7 @@ RXB1D43                           00000003
 RXB1D44                           00000004
 RXB1D45                           00000005
 RXB1D46                           00000006
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 32
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 32
 
 
 SYMBOL TABLE
@@ -1882,7 +1883,7 @@ RXF10EIDH                         00000D76
 RXF10EIDL                         00000D77
 RXF10EN                           00000002
 RXF10SIDH                         00000D74
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 33
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 33
 
 
 SYMBOL TABLE
@@ -1941,7 +1942,7 @@ RXF5SIDH                          00000F14
 RXF5SIDL                          00000F15
 RXF6EIDH                          00000D62
 RXF6EIDL                          00000D63
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 34
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 34
 
 
 SYMBOL TABLE
@@ -2000,7 +2001,7 @@ RXRTRRO_FILHIT3                   00000003
 RXRTRRO_RXB0CON                   00000003
 RXRTRRO_RXB1CON                   00000003
 RXRTRRO_TXLARB                    00000005
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 35
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 35
 
 
 SYMBOL TABLE
@@ -2010,8 +2011,8 @@ RXRTR_TXRTR                       00000006
 RXWARN                            00000001
 R_NOT_W                           00000002
 R_W                               00000002
-RalentirLumiere                   00001072
-RcvError                          00001042
+RalentirLumiere                   00001076
+RcvError                          00001046
 S                                 00000003
 SAM                               00000006
 SBOREN                            00000006
@@ -2059,7 +2060,7 @@ SSPADD                            00000FC8
 SSPBUF                            00000FC9
 SSPCON1                           00000FC6
 SSPCON2                           00000FC5
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 36
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 36
 
 
 SYMBOL TABLE
@@ -2118,7 +2119,7 @@ T2CKPS1                           00000001
 T2CON                             00000FCA
 T2OUTPS0                          00000003
 T2OUTPS1                          00000004
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 37
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 37
 
 
 SYMBOL TABLE
@@ -2177,7 +2178,7 @@ TMR3IP                            00000001
 TMR3L                             00000FB2
 TMR3ON                            00000000
 TO                                00000003
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 38
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 38
 
 
 SYMBOL TABLE
@@ -2191,7 +2192,7 @@ TOUTPS0                           00000003
 TOUTPS1                           00000004
 TOUTPS2                           00000005
 TOUTPS3                           00000006
-TO_ISR                            0000107E
+TO_ISR                            00001082
 TRISA                             00000F92
 TRISA0                            00000000
 TRISA1                            00000001
@@ -2236,7 +2237,7 @@ TRMT                              00000001
 TUN0                              00000000
 TUN1                              00000001
 TUN2                              00000002
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 39
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 39
 
 
 SYMBOL TABLE
@@ -2295,7 +2296,7 @@ TXB0D45                           00000005
 TXB0D46                           00000006
 TXB0D47                           00000007
 TXB0D5                            00000F4B
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 40
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 40
 
 
 SYMBOL TABLE
@@ -2354,7 +2355,7 @@ TXB1D14                           00000004
 TXB1D15                           00000005
 TXB1D16                           00000006
 TXB1D17                           00000007
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 41
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 41
 
 
 SYMBOL TABLE
@@ -2413,7 +2414,7 @@ TXB1D73                           00000003
 TXB1D74                           00000004
 TXB1D75                           00000005
 TXB1D76                           00000006
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 42
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 42
 
 
 SYMBOL TABLE
@@ -2472,7 +2473,7 @@ TXB2D42                           00000002
 TXB2D43                           00000003
 TXB2D44                           00000004
 TXB2D45                           00000005
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 43
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 43
 
 
 SYMBOL TABLE
@@ -2531,7 +2532,7 @@ TXERR                             00000004
 TXERRCNT                          00000F76
 TXIE                              00000004
 TXIF                              00000004
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 44
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 44
 
 
 SYMBOL TABLE
@@ -2550,7 +2551,7 @@ TempsCourt                        00000063
 TempsLong                         00000064
 TesterA                           00001036
 TesterCEtA                        00001026
-TesterClignotant                  0000109A
+TesterClignotant                  0000109E
 UA                                00000001
 VCFG0                             00000004
 VCFG1                             00000005
@@ -2590,7 +2591,7 @@ _BORV_2_2L                        000000F7
 _BORV_3_2L                        000000FF
 _CONFIG1H                         00300001
 _CONFIG2H                         00300003
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 45
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 45
 
 
 SYMBOL TABLE
@@ -2649,7 +2650,7 @@ _LVP_OFF_4L                       000000FB
 _LVP_ON_4L                        000000FF
 _MCLRE_OFF_3H                     0000007F
 _MCLRE_ON_3H                      000000FF
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 46
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 46
 
 
 SYMBOL TABLE
@@ -2708,18 +2709,18 @@ _XINST_ON_4L                      000000FF
 __18F4680                         00000001
 __DEBUG                           
 __MPLAB_DEBUGGER_ICD3             1
-MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-4-2018  11:47:59         PAGE 47
+MPASM 5.77             NEWPIC_8B_GENERAL.ASM   12-7-2018  8:23:24         PAGE 47
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-allumerJaune                      000010DA
-allumerRouge                      000010E4
-allumerVerte                      000010EE
-arret                             00001090
+allumerJaune                      000010DE
+allumerRouge                      000010E8
+allumerVerte                      000010F2
+arret                             00001094
 loop                              000000E6
-saut                              000010F8
+saut                              000010FC
 
 Errors   :     0
 Warnings :    25 reported,     0 suppressed
